@@ -12,4 +12,4 @@ How to use:
 4. Select which method
 5. Repeat until done
 
-Any other questions tweet me on twitter @jackstockley_ and Ill add it her
+Any other questions tweet me on twitter @jackstockley_ and Ill add it here
