@@ -15,8 +15,8 @@ import java.util.Scanner;
 public class AddressBook_Main {
 
 	public static String IP; //NULL Variables for the mySQL server IP
-	public static final String user = "user"//Username for the mySQL sever
-	public static final String password = "pass"; //Password for the mySQL server TODO figure out how to hide password
+	public static final String user = "Jack"; //Username for the mySQL sever
+	public static final String password = "Dr1v3r0o"; //Password for the mySQL server TODO figure out how to hide password
 	static Connection conn; //NULL connection to get connected to the mySQL server
 	public static Scanner console = new Scanner(System.in); //Used to get numbers and strings from console
 
