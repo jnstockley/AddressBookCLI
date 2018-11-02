@@ -6,7 +6,7 @@ Setup:
 4. In encryption create two diffrent random strings have to be 8 characters longs 
 
 How to use:
-1. Run program
+1. Run program in command prompt
 2. Use one or two for which IP you want
 3. Select which table
 4. Select which method
