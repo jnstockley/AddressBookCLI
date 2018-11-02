@@ -1,7 +1,7 @@
 # AddressBook
 Setup:
 1. Create mySQL server
-2. Change the ip`s, yes both, to you internal and or external ip
+2. Change the IP`s, yes both, to you internal and or external IP
 3. Change user and pass to your mySQL user username and password
 4. In encryption create two diffrent random strings have to be 8 characters longs 
 
