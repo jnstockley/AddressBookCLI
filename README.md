@@ -12,4 +12,9 @@ How to use:
 4. Select which method
 5. Repeat until done
 
+Encryption UPDATE!!!
+I have disabled the encryption part of the program for the time being!
+I posted this update to fix some bugs and imporve performace with the program!
+I will eventually post an updated version of the program with encryption!
+
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
