@@ -174,26 +174,34 @@ public class Person {
 	 */
 	public static List<Person> getAll(Connection conn){
 		List<Person> people = new ArrayList<Person>();
-		Encryption decrypt = new Encryption();
 		try {
+			//Encryption decrypt = new Encryption();
 			PreparedStatement ps = conn.prepareStatement("SELECT person.id, person.firstName, person.middleInitial, person.lastName, address.number, address.name, address.city, address.state, address.zip, occupation.occupation from person inner join address on person.addressId=address.id inner join occupation on person.occupationId=occupation.id");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				Person person = new Person();
 				int col = 1;
 				person.setId(rs.getInt(col++));
-				person.setFirstName(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setMiddleInitial(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setLastName(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setNumber(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setName(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setCity(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setState(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setZip(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setOccupation(decrypt.decrypt(rs.getString(col++).getBytes()));
+				/*person.setFirstName(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setMiddleInitial(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setLastName(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setNumber(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setName(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setCity(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setState(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setZip(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setOccupation(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));*/
+				person.setFirstName(rs.getString(col++));
+				person.setMiddleInitial(rs.getString(col++));
+				person.setLastName(rs.getString(col++));
+				person.setNumber(rs.getString(col++));
+				person.setName(rs.getString(col++));
+				person.setCity(rs.getString(col++));
+				person.setState(rs.getString(col++));
+				person.setZip(rs.getString(col++));
+				person.setOccupation(rs.getString(col++));
 				people.add(person);
 			}
-			
 			return people;
 		}
 		catch (Exception e) {
@@ -210,8 +218,8 @@ public class Person {
 	 * @return A singular person
 	 */
 	public static Person getBy(Connection conn, String value){
-		Encryption decrypt = new Encryption();
 		try {
+			//Encryption decrypt = new Encryption();
 			Person person = new Person();
 			PreparedStatement ps = conn.prepareStatement("SELECT person.id, person.firstName, person.middleInitial, person.lastName, address.number, address.name, address.city, address.state, address.zip, occupation.occupation from person inner join address on person.addressId=address.id inner join occupation on person.occupationId=occupation.id where person.id=?;");
 			ps.setInt(1, Integer.parseInt(value));
@@ -219,15 +227,24 @@ public class Person {
 			if (rs.next()){
 				int col = 1;
 				person.setId(rs.getInt(col++));
-				person.setFirstName(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setMiddleInitial(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setLastName(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setNumber(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setName(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setCity(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setState(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setZip(decrypt.decrypt(rs.getString(col++).getBytes()));
-				person.setOccupation(decrypt.decrypt(rs.getString(col++).getBytes()));
+				/*person.setFirstName(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setMiddleInitial(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setLastName(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setNumber(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setName(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setCity(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setState(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setZip(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				person.setOccupation(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));*/
+				person.setFirstName(rs.getString(col++));
+				person.setMiddleInitial(rs.getString(col++));
+				person.setLastName(rs.getString(col++));
+				person.setNumber(rs.getString(col++));
+				person.setName(rs.getString(col++));
+				person.setCity(rs.getString(col++));
+				person.setState(rs.getString(col++));
+				person.setZip(rs.getString(col++));
+				person.setOccupation(rs.getString(col++));
 			}
 			return person;
 		}
@@ -245,14 +262,17 @@ public class Person {
 	 * @param lastName The last name of the person
 	 */
 	public static void insert(Connection conn, String firstName, String middleInitial, String lastName, int addressId, int occupationId){
-		Encryption encrypt = new Encryption();
 		try {
+			//Encryption encrypt = new Encryption();
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO person (firstName, middleInitial, lastName, addressId, occupationId) values(?,?,?,?,?)");
-			ps.setString(1, encrypt.encrypt(firstName));
-			ps.setString(2, encrypt.encrypt(middleInitial));
-			ps.setString(3, encrypt.encrypt(lastName));
-			ps.setString(4, encrypt.encrypt(addressId+""));
-			ps.setString(5, encrypt.encrypt(occupationId+""));
+			/*ps.setString(1, encrypt.encryptText(firstName,encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(2, encrypt.encryptText(middleInitial,encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(3, encrypt.encryptText(lastName,encrypt.getPublic("KeyPair/publicKey")));*/
+			ps.setString(1, firstName);
+			ps.setString(2, middleInitial);
+			ps.setString(3, lastName);
+			ps.setInt(4, addressId);
+			ps.setInt(5, occupationId);
 			ps.execute();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -268,12 +288,15 @@ public class Person {
 	 * @param lastName The new persons last name
 	 */
 	public static void update(Connection conn, int id, String firstName, String middleInitial, String lastName){
-		Encryption encrypt = new Encryption();
 		try{
+			//Encryption encrypt = new Encryption();
 			PreparedStatement ps = conn.prepareStatement("UPDATE person SET firstName=?,middleInitial=?,lastName=? WHERE id = ?");
-			ps.setString(1, encrypt.encrypt(firstName));
-			ps.setString(2, encrypt.encrypt(middleInitial));
-			ps.setString(3, encrypt.encrypt(lastName));
+			/*ps.setString(1, encrypt.encryptText(firstName,encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(2, encrypt.encryptText(middleInitial,encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(3, encrypt.encryptText(lastName,encrypt.getPublic("KeyPair/publicKey")));*/
+			ps.setString(1, firstName);
+			ps.setString(2, middleInitial);
+			ps.setString(3, lastName);
 			ps.setInt(4, id);
 			ps.executeUpdate();
 		}catch(Exception e){

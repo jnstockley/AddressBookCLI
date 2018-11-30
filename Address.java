@@ -119,7 +119,8 @@ public class Address {
 	/**
 	 * Returns id, the house number, the street name, the city, the state, and the zip code of the address called
 	 */
-	public String display() {
+	@Override
+	public String toString() {
 		return "Id: " + this.getId() + " " + this.getNumber() + " " + this.getName() + " " + this.getCity() + ", " + this.getState() + " " + this.getZip();
 	}
 
@@ -130,19 +131,24 @@ public class Address {
 	 */
 	public static List<Address> getAll(Connection conn){
 		List<Address> addresses = new ArrayList<Address>();
-		Encryption decrypt = new Encryption();
 		try {
+			//Encryption decrypt = new Encryption();
 			PreparedStatement ps = conn.prepareStatement("SELECT id, number, name, city, state, zip FROM address");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				Address address = new Address();
 				int col = 1;
 				address.setId(rs.getInt(col++));
-				address.setNumber(decrypt.decrypt(rs.getString(col++).getBytes()));
-				address.setName(decrypt.decrypt(rs.getString(col++).getBytes()));
-				address.setCity(decrypt.decrypt(rs.getString(col++).getBytes()));
-				address.setState(decrypt.decrypt(rs.getString(col++).getBytes()));
-				address.setZip(decrypt.decrypt(rs.getString(col++).getBytes()));
+				/*address.setNumber(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));
+				address.setName(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));
+				address.setCity(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));
+				address.setState(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));
+				address.setZip(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));*/
+				address.setNumber(rs.getString(col++));
+				address.setName(rs.getString(col++));
+				address.setCity(rs.getString(col++));
+				address.setState(rs.getString(col++));
+				address.setZip(rs.getString(col++));
 				addresses.add(address);
 			}
 			return addresses;
@@ -161,8 +167,8 @@ public class Address {
 	 * @return The singular address the user wants
 	 */
 	public static Address getBy(Connection conn, String value, String fieldName){
-		Encryption decrypt = new Encryption();
 		try {
+			//Encryption decrypt = new Encryption();
 			Address address = new Address();
 			PreparedStatement ps = conn.prepareStatement("SELECT id, number, name, city, state, zip FROM address WHERE " + fieldName + "  = ?");
 			//TODO Bug fixed?
@@ -176,11 +182,16 @@ public class Address {
 			if (rs.next()){
 				int col = 1;
 				address.setId(rs.getInt(col++));
-				address.setNumber(decrypt.decrypt(rs.getString(col++).getBytes()));
-				address.setName(decrypt.decrypt(rs.getString(col++).getBytes()));
-				address.setCity(decrypt.decrypt(rs.getString(col++).getBytes()));
-				address.setState(decrypt.decrypt(rs.getString(col++).getBytes()));
-				address.setZip(decrypt.decrypt(rs.getString(col++).getBytes()));
+				/*address.setNumber(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));
+				address.setName(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));
+				address.setCity(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));
+				address.setState(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));
+				address.setZip(decrypt.decryptText(rs.getString(col++), decrypt.getPrivate("KeyPair/privateKey")));*/
+				address.setNumber(rs.getString(col++));
+				address.setName(rs.getString(col++));
+				address.setCity(rs.getString(col++));
+				address.setState(rs.getString(col++));
+				address.setZip(rs.getString(col++));
 			}
 			return address;
 		}
@@ -200,14 +211,19 @@ public class Address {
 	 * @param zip The zip code the user entered
 	 */
 	public static void insert(Connection conn, String number, String name, String city, String state, String zip){
-		Encryption encrypt = new Encryption();
 		try {
+			//Encryption encrypt = new Encryption();
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO address (number, name, city, state, zip) values(?,?,?,?,?)");
-			ps.setString(1, encrypt.encrypt(number));
-			ps.setString(2, encrypt.encrypt(name));
-			ps.setString(3, encrypt.encrypt(city));
-			ps.setString(4, encrypt.encrypt(state));
-			ps.setString(5, encrypt.encrypt(zip));
+			/*ps.setString(1, encrypt.encryptText(number, encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(2, encrypt.encryptText(name, encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(3, encrypt.encryptText(city, encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(4, encrypt.encryptText(state, encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(5, encrypt.encryptText(zip, encrypt.getPublic("KeyPair/publicKey")));*/
+			ps.setString(1, number);
+			ps.setString(2, name);
+			ps.setString(3, city);
+			ps.setString(4, state);
+			ps.setString(5, zip);
 			ps.execute();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -226,14 +242,20 @@ public class Address {
 	 * @param zip The new zip code
 	 */
 	public static void update(Connection conn, int id, String number, String name, String city, String state, String zip){
-		Encryption encrypt = new Encryption();
 		try{
+			//Encryption encrypt = new Encryption();
 			PreparedStatement ps = conn.prepareStatement("UPDATE address SET number=?,name=?,city=?,state=?,zip=? WHERE id = ?");
-			ps.setString(1, encrypt.encrypt(number));
-			ps.setString(2, encrypt.encrypt(name));
-			ps.setString(3, encrypt.encrypt(city));
-			ps.setString(4, encrypt.encrypt(state));
-			ps.setString(5, encrypt.encrypt(zip));
+			/*ps.setString(1, encrypt.encryptText(number, encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(2, encrypt.encryptText(name, encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(3, encrypt.encryptText(city, encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(4, encrypt.encryptText(state, encrypt.getPublic("KeyPair/publicKey")));
+			ps.setString(5, encrypt.encryptText(zip, encrypt.getPublic("KeyPair/publicKey")));*/
+			ps.setString(1, number);
+			ps.setString(2, name);
+			ps.setString(3, city);
+			ps.setString(4, state);
+			ps.setString(5, zip);
+			ps.setInt(6, id);
 			ps.executeUpdate();
 		}catch(Exception e){
 			System.out.println(e.getMessage());

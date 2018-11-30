@@ -9,7 +9,7 @@ import java.util.Scanner;
  * 
  * @author Jack Stockley
  *
- * @version 0.5
+ * @version 0.9
  */
 
 public class AddressBook_Main {
@@ -22,24 +22,26 @@ public class AddressBook_Main {
 
 	/**
 	 * Runs the program
-	 * @param args
+	 * @param args 
 	 */
-	public static void main(String[] args) {
+	public static void main(String[] args){
 		System.out.print("Internal or External IP (1 for Internal or 2 for external): ");
 		int choice = console.nextInt();
 		switch (choice){
 		case 1:
-			IP = "10.0.0.183:8080";
+			IP = "internal ip";
 			break;
 		case 2:
-			IP = "jackstockley.ddns.net:8080";
+			IP = "external ip";
 			break;
 		}
 		//TRY CATCH method to ensure that the mySQL connection was successful
 		try{
-			conn = DriverManager.getConnection("jdbc:mysql://"+IP+"/mydb",user,password);
-		}catch(SQLException e){
+			Class.forName("com.mysql.jdbc.Driver");
+			conn = DriverManager.getConnection("jdbc:mysql://"+IP+":3306/mydb",user,password);
+		}catch(Exception e){
 			System.out.println(e.getLocalizedMessage());
+			System.exit(1);
 		}
 
 		int request;
@@ -188,17 +190,17 @@ public class AddressBook_Main {
 	 * @param conn Passes the mySQL connection
 	 */
 	private static void addAddress(Connection conn){
-		System.out.print("Enter Street Number: ");
-		String number = console.next();
 		console.nextLine();
+		System.out.print("Enter Street Number: ");
+		String number = console.nextLine();
 		System.out.print("Enter the street name: ");
 		String name = console.nextLine();
 		System.out.print("Enter the city: ");
-		String city = console.next();
+		String city = console.nextLine();
 		System.out.print("Enter the state: ");
-		String state = console.next();
+		String state = console.nextLine();
 		System.out.print("Enter the zip code: ");
-		String zip = console.next();
+		String zip = console.nextLine();
 		Address.insert(conn, number, name, city, state, zip);
 	}
 
@@ -209,18 +211,19 @@ public class AddressBook_Main {
 	private static void updateAddress(Connection conn){
 		getAllAddresses(conn);
 		System.out.print("Please enter the id of the address you want to update: ");
+		console.nextLine();
 		int id = console.nextInt();
 		System.out.print("Enter new house number: ");
-		String number = console.next();
 		console.nextLine();
+		String number = console.nextLine();
 		System.out.print("Enter new street name: ");
 		String name = console.nextLine();
 		System.out.print("Enter new city: ");
-		String city = console.next();
+		String city = console.nextLine();
 		System.out.print("Enter new state: ");
-		String state = console.next();
+		String state = console.nextLine();
 		System.out.print("Enter new zip code: ");
-		String zip = console.next();
+		String zip = console.nextLine();
 		Address.update(conn, id, number, name, city, state, zip);
 	}
 
@@ -242,7 +245,7 @@ public class AddressBook_Main {
 	private static void getAllPerson(Connection conn){
 		List<Person> people = Person.getAll(conn);
 		for(Person person: people){
-			person.print();
+			System.out.println(person);
 		}
 	}
 	
@@ -253,7 +256,7 @@ public class AddressBook_Main {
 	 */
 	private static void getPerson(Connection conn, int id){
 		Person person = Person.getBy(conn, Integer.toString(id));
-		person.print();
+		System.out.println(person);
 	}
 	
 	/**
@@ -262,12 +265,13 @@ public class AddressBook_Main {
 	 */
 	//TODO Allow user to create a new address and/or occupation
 	private static void addPerson(Connection conn){
+		console.nextLine();
 		System.out.print("Enter First Name: ");
-		String firstName = console.next();
+		String firstName = console.nextLine();
 		System.out.print("Enter Middle Initial: ");
-		String middleInitial = console.next();
+		String middleInitial = console.nextLine();
 		System.out.print("Enter Last Name: ");
-		String lastName = console.next();
+		String lastName = console.nextLine();
 		getAllAddresses(conn);
 		System.out.print("Enter the ID of the address " + firstName + ": ");
 		int addressId = console.nextInt();
@@ -293,12 +297,12 @@ public class AddressBook_Main {
 		System.out.print("Please enter the id of the person you want to update: ");
 		int id = console.nextInt();
 		System.out.print("Enter First Name: ");
-		String firstName = console.next();
 		console.nextLine();
+		String firstName = console.nextLine();
 		System.out.print("Enter Middle Initial: ");
 		String middleInitial = console.nextLine();
 		System.out.print("Enter Last Name: ");
-		String lastName = console.next();
+		String lastName = console.nextLine();
 		Person.update(conn, id, firstName, middleInitial, lastName);
 	}
 	
@@ -331,6 +335,7 @@ public class AddressBook_Main {
 	 */
 	private static void getOccupation(Connection conn, int id){
 		Occupation occupation = Occupation.getBy(conn, Integer.toString(id), "id");
+		System.out.println(occupation);
 		occupation.print();
 	}
 	
@@ -339,8 +344,9 @@ public class AddressBook_Main {
 	 * @param conn The mySQL connection
 	 */
 	private static void addOccupation(Connection conn){
+		console.nextLine();
 		System.out.print("Enter Occupation Name: ");
-		String occupationName = console.next();
+		String occupationName = console.nextLine();
 		Occupation.insert(conn, occupationName);
 	}
 	
@@ -350,10 +356,12 @@ public class AddressBook_Main {
 	 */
 	private static void updateOccupation(Connection conn){
 		getAllOccupation(conn);
+		console.nextLine();
 		System.out.print("Please enter the id of the occupation you want to update: ");
 		int id = console.nextInt();
 		System.out.print("Enter Occupation Name: ");
-		String occupationName = console.next();
+		console.nextLine();
+		String occupationName = console.nextLine();
 		Occupation.update(conn, id, occupationName);
 	}
 

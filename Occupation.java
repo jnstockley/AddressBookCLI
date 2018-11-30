@@ -38,15 +38,16 @@ public class Occupation {
 	 */
 	public static List<Occupation> getAll(Connection conn){
 		List<Occupation> occupations = new ArrayList<Occupation>();
-		Encryption decrypt = new Encryption();
 		try {
+			//Encryption decrypt = new Encryption();
 			PreparedStatement ps = conn.prepareStatement("SELECT id, occupation FROM occupation");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()){
 				Occupation occupation = new Occupation();
 				int col = 1;
 				occupation.setId(rs.getInt(col++));
-				occupation.setOccupation(decrypt.decrypt(rs.getString(col++).getBytes()));
+				occupation.setOccupation(rs.getString(col++));
+				//occupation.setOccupation(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
 				occupations.add(occupation);
 			}
 			return occupations;
@@ -65,8 +66,8 @@ public class Occupation {
 	 * @return
 	 */
 	public static Occupation getBy(Connection conn, String value, String fieldName){
-		Encryption decrypt = new Encryption();
 		try {
+			//Encryption decrypt = new Encryption();
 			Occupation occupation = new Occupation();
 			PreparedStatement ps = conn.prepareStatement("SELECT id, occupation FROM occupation WHERE " + fieldName + "  = ?");
 			ps.setInt(1, Integer.parseInt(value));
@@ -74,7 +75,8 @@ public class Occupation {
 			if (rs.next()){
 				int col = 1;
 				occupation.setId((rs.getInt(col++)));
-				occupation.setOccupation(decrypt.decrypt(rs.getString(col++).getBytes()));
+				occupation.setOccupation(rs.getString(col++));
+				//occupation.setOccupation(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
 			}
 			return occupation;
 			
@@ -110,11 +112,12 @@ public class Occupation {
 	 * @param occupation The name of the occupation the user is adding
 	 */
 	public static void insert(Connection conn, String occupation){
-		Encryption encrypt = new Encryption();
 		//String occupationEncrypt = Encryption.encryptOccupation(occupation);
 		try {
+			//Encryption encrypt = new Encryption();
 			PreparedStatement ps = conn.prepareStatement("INSERT INTO occupation (occupation) values(?)");
-			ps.setString(1, encrypt.encrypt(occupation));
+			ps.setString(1, occupation);
+			//ps.setString(1, encrypt.encryptText(occupation,encrypt.getPublic("KeyPair/publicKey")));
 			ps.execute();
 		} catch (Exception e) {
 			System.out.println(e.getMessage());
@@ -128,10 +131,11 @@ public class Occupation {
 	 * @param occupation The new occupation name
 	 */
 	public static void update(Connection conn, int id, String occupation){
-		Encryption encrypt = new Encryption();
 		try{
+			//Encryption encrypt = new Encryption();
 			PreparedStatement ps = conn.prepareStatement("UPDATE occupation SET occupation=? WHERE id = ?");
-			ps.setString(1, encrypt.encrypt(occupation));
+			ps.setString(1, occupation);
+			//ps.setString(1, encrypt.encryptText(occupation,encrypt.getPublic("KeyPair/publicKey")));
 			ps.setInt(2, id);
 			ps.executeUpdate();
 		}catch(Exception e){
