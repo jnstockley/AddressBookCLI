@@ -1,6 +1,6 @@
 # AddressBook
 ATTENTION!!!!!
-Today around 2:30 CDT the mysql server will be taken offline for several hours! I am going to consolidating my servers. I am hoping to have the mySQL server back up around 8:00 PM CDT at the latest! All data on the server will be deleted!
+Today around 2:30 CDT the mySQL server will be taken offline for several hours! I am going to be consolidating my servers. I am hoping to have the mySQL server back up around 8:00 PM CDT at the latest! All data on the server will be deleted!
 
 Setup:
 1. Create mySQL server
