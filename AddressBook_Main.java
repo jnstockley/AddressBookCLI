@@ -245,7 +245,7 @@ public class AddressBook_Main {
 	private static void getAllPerson(Connection conn){
 		List<Person> people = Person.getAll(conn);
 		for(Person person: people){
-			System.out.println(person);
+			person.print();
 		}
 	}
 	
@@ -256,7 +256,7 @@ public class AddressBook_Main {
 	 */
 	private static void getPerson(Connection conn, int id){
 		Person person = Person.getBy(conn, Integer.toString(id));
-		System.out.println(person);
+		person.print();
 	}
 	
 	/**
