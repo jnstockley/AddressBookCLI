@@ -2,6 +2,9 @@
 ATTENTION!!!!!
 Today around 2:30 CDT the mySQL server will be taken offline for several hours! I am going to be consolidating my servers. I am hoping to have the mySQL server back up around 8:00 PM CDT at the latest! All data on the server will be deleted!
 
+UPDATE!!!!
+I am currently having some troubles with port forwading on my xfinity router! I keep getting an error saying cant commuicate with router! I have tried everything I can to get this back up! I will contiunue to work today Ill post with an update today!
+
 Setup:
 1. Create mySQL server
 2. Change the IP`s, yes both, to you internal and or external IP
