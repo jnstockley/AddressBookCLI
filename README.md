@@ -23,3 +23,5 @@ What`s to come in later versions
   - More ways to manipulate the data on the mySQL server
 
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
+
+Find a bug please be sure to report it under the issues tab!
