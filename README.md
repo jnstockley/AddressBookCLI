@@ -1,23 +1,25 @@
 # AddressBook
-Extremely Overdue Update!!!!!
-I lot has happened since I last posted an update!  I had mys server up for a bit but currently it is down due to a corrupted kernel on my sevrer! I am trying right now to recover the data on the server to save reinstall time! Wish me luck. Also I have been working hard on an updated version of the software that has a whole new front end and new features! I will post it soon once I have cleaned up some of the code and finsihs the java doc for it! Thanks!
+Address Book CLI Version 1.0!
 
-Setup:
-1. Create mySQL server
-2. Change the IP`s, yes both, to you internal and or external IP
-3. Change user and pass to your mySQL user username and password
-4. In encryption create two diffrent random strings have to be 8 characters longs 
+How to use this program:
+1. Run the program in command prompt or a termianl depending on which OS you are on
+2. When prompted type in IP of your SQL server
+3. After enter user name and password
+4. Select which table and which method you want to use (Type 0 to exit program)
 
-How to use:
-1. Run program in command prompt
-2. Use one or two for which IP you want
-3. Select which table
-4. Select which method
-5. Repeat until done
-
-Encryption UPDATE!!!
-I have disabled the encryption part of the program for the time being!
-I posted this update to fix some bugs and imporve performace with the program!
-I will eventually post an updated version of the program with encryption!
+What`s new in Version 1.0:
+1. New features:
+  - Added ability to work with any SQL server
+  - Added ability to enter personal username and password
+  - When typing in password, password is hidden
+  - Added ability to get multiple address, occupations, and people, with similar fields
+  - Re-designed CLI
+2. Bug Fixes and many performance improvements
+  - Re-designed back-end to handle new features and more to come in the future
+  - Program should crash less often
+  
+What`s to come in later versions
+  - RSA Encryption with public and private key
+  - More ways to manipulate the data on the mySQL server
 
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
