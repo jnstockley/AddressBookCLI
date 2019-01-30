@@ -21,6 +21,8 @@ What`s new in Version 1.0:
 What`s to come in later versions
   - RSA Encryption with public and private key
   - More ways to manipulate the data on the mySQL server
+  - Program Updater
+  - Ability for program to produce logs
 
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
 
