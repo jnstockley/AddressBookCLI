@@ -4,157 +4,163 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * 
+ * @author Jack Stockely
+ * 
+ * @version 1.0
+ * 
+ * @description The Occupation object of the Address Book project
+ * 
+ * @date 30 January 2019
+ *
+ */
 public class Occupation {
 	private int id;
 	private String occupation;
-
 	public int getId() {
 		return id;
 	}
-	
 	public void setId(int id) {
 		this.id = id;
 	}
-	
 	public String getOccupation() {
 		return occupation;
 	}
-	
 	public void setOccupation(String occupation) {
 		this.occupation = occupation;
 	}
 
 	/**
-	 * Prints out the occupation name to the console
+	 * Overrides the built in toString command and replaces it with the current one which returns the id and occupation of a given occupation
 	 */
-	public void print() {
-		System.out.println("ID: " + this.getId() + " " + this.getOccupation());
+	public String toString() {
+		return "ID: " + this.getId() + " " + this.getOccupation();
 	}
 
 	/**
-	 * Adds the occupation to a list and returns it
+	 * Returns a list of all the occupations in the mySQL server
 	 * @param conn The mySQL connection
-	 * @return The list of occupations
+	 * @return The list of all occupations on the mySQL server
 	 */
 	public static List<Occupation> getAll(Connection conn){
-		List<Occupation> occupations = new ArrayList<Occupation>();
 		try {
-			//Encryption decrypt = new Encryption();
+			List<Occupation> occupations = new ArrayList<Occupation>();
 			PreparedStatement ps = conn.prepareStatement("SELECT id, occupation FROM occupation");
 			ResultSet rs = ps.executeQuery();
-			while(rs.next()){
+			while(rs.next()) {
 				Occupation occupation = new Occupation();
 				int col = 1;
 				occupation.setId(rs.getInt(col++));
 				occupation.setOccupation(rs.getString(col++));
-				//occupation.setOccupation(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
 				occupations.add(occupation);
 			}
 			return occupations;
-		}
-		catch (Exception e) {
-			System.out.println(e.getMessage());
+		}catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
 
 	/**
-	 * Returns a singular occupation passed on the filed and value the user provided
+	 * Returns a list of all occupation that have a user defined field type in common
 	 * @param conn The mySQL connection
-	 * @param value The value the filed type need to equal
-	 * @param fieldName The filed type of how the user is looking up
-	 * @return
+	 * @param fieldName The user defined field type
+	 * @param field The field that the occupations have in common
+	 * @return A list of similar occupations
 	 */
-	public static Occupation getBy(Connection conn, String value, String fieldName){
+	public static List<Occupation> getSimilar(Connection conn, String fieldName, String field){
 		try {
-			//Encryption decrypt = new Encryption();
-			Occupation occupation = new Occupation();
-			PreparedStatement ps = conn.prepareStatement("SELECT id, occupation FROM occupation WHERE " + fieldName + "  = ?");
-			ps.setInt(1, Integer.parseInt(value));
+			List<Occupation> occupations  = new ArrayList<Occupation>();
+			PreparedStatement ps = conn.prepareStatement("SELECT id, occupation FROM occupation WHERE " + fieldName + " = ?");
+			ps.setString(1, field);
 			ResultSet rs = ps.executeQuery();
-			if (rs.next()){
+			while(rs.next()) {
+				Occupation occupation = new Occupation();
 				int col = 1;
-				occupation.setId((rs.getInt(col++)));
+				occupation.setId(rs.getInt(col++));
 				occupation.setOccupation(rs.getString(col++));
-				//occupation.setOccupation(decrypt.decryptText(rs.getString(col++),decrypt.getPrivate("KeyPair/privateKey")));
+				occupations.add(occupation);
+			}
+			return occupations;
+		}catch (Exception e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	/**
+	 * Returns a single occupation
+	 * @param conn The mySQL connection
+	 * @param fieldName The user defined field
+	 * @param field The given field
+	 * @return The single occupation
+	 */
+	public static Occupation getBy(Connection conn, String fieldName, String field) {
+		try {
+			Occupation occupation = new Occupation();
+			PreparedStatement ps = conn.prepareStatement("SELECT id, occupation FROM occupation WHERE " + fieldName + " = ?");
+			ps.setString(1, field);
+			ResultSet rs = ps.executeQuery();
+			if(rs.next()) {
+				int col = 1;
+				occupation.setId(rs.getInt(col++));
+				occupation.setOccupation(rs.getString(col++));
 			}
 			return occupation;
-			
-		}
-		catch (Exception e) {
-			System.out.println(e.getMessage());
+		}catch (Exception e) {
+			e.printStackTrace();
 			return null;
 		}
 	}
-	
-	/*public static int getByName(Connection conn, String name){
-		Occupation occupation = new Occupation();
-		PreparedStatement ps;
-		try {
-			ps = conn.prepareStatement("Select occupation FROM occupation WHERE occupation = ?");
-			ps.setString(1, name);
-		ResultSet rs = ps.executeQuery();
-		if(rs.next()){
-			int col = 1;
-			occupation.setId((rs.getInt(col++)));
-			occupation.setOccupation(rs.getString(col++));
-		}return occupation.getId();
-		} catch (SQLException e) {
-			System.out.println(e.getMessage());
-			return 0;
-		}
-		
-	}*/
 
 	/**
-	 * Uses the provided occupation and adds it to the occupation table
+	 * Updates a user defined occupation on the mySQL server
 	 * @param conn The mySQL connection
-	 * @param occupation The name of the occupation the user is adding
+	 * @param id The id of the occupation the user wants to update
+	 * @param occupationName The new occupation name
 	 */
-	public static void insert(Connection conn, String occupation){
-		//String occupationEncrypt = Encryption.encryptOccupation(occupation);
-		try {
-			//Encryption encrypt = new Encryption();
-			PreparedStatement ps = conn.prepareStatement("INSERT INTO occupation (occupation) values(?)");
-			ps.setString(1, occupation);
-			//ps.setString(1, encrypt.encryptText(occupation,encrypt.getPublic("KeyPair/publicKey")));
-			ps.execute();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+	public static void update(Connection conn, int id, String occupationName) {
+		Occupation occupation = Occupation.getBy(conn, "id", Integer.toString(id));
+		if(occupationName.equals("")) {
+			occupationName=occupation.getOccupation();
 		}
-	}
-
-	/**
-	 * Uses the provided id to update the occupation name
-	 * @param conn The mySQL connection
-	 * @param id The id of the occupation to update
-	 * @param occupation The new occupation name
-	 */
-	public static void update(Connection conn, int id, String occupation){
-		try{
-			//Encryption encrypt = new Encryption();
-			PreparedStatement ps = conn.prepareStatement("UPDATE occupation SET occupation=? WHERE id = ?");
-			ps.setString(1, occupation);
-			//ps.setString(1, encrypt.encryptText(occupation,encrypt.getPublic("KeyPair/publicKey")));
-			ps.setInt(2, id);
+		try {
+			PreparedStatement ps = conn.prepareStatement("UPDATE occupation SET occupation=?");
+			ps.setString(1, occupationName);
 			ps.executeUpdate();
-		}catch(Exception e){
-			System.out.println(e.getMessage());
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 
 	/**
-	 * Uses the provided id to remove the occupation from the occupation table
+	 * Inserts a new occupation onto the mySQL server
 	 * @param conn The mySQL connection
-	 * @param id The id of the occupation to remove
+	 * @param occupation The new occupation to be added
 	 */
-	public static void remove(Connection conn, int id){
+	public static void insert(Connection conn, String occupation) {
 		try {
-			PreparedStatement ps = conn.prepareStatement("DELETE FROM occupation WHERE id = ?");
+			PreparedStatement ps = conn.prepareStatement("INSERT INTO occupation (occupation) values (?)");
+			ps.setString(1, occupation);
+			ps.execute();
+		}catch (Exception e) {
+			e.printStackTrace();
+		}
+	}
+
+	/**
+	 * Removes an occupation from the mySQL server
+	 * @param conn The mySQL connection
+	 * @param id The id of the occupation the user wants to remove
+	 */
+	public static void remove(Connection conn, int id) {
+		try {
+			PreparedStatement ps = conn.prepareStatement("DELETE FROM occupation WHERE id = ? ");
 			ps.setInt(1, id);
 			ps.executeUpdate();
-		} catch (Exception e) {
-			System.out.println(e.getMessage());
+		}catch (Exception e) {
+			e.printStackTrace();
 		}
 	}
 }
