@@ -1,5 +1,5 @@
 # AddressBook
-Address Book CLI Version 1.0!
+Address Book CLI Version 1.0.1!
 
 How to use this program:
 1. Run the program in command prompt or a termianl depending on which OS you are on
