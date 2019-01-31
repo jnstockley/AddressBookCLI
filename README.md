@@ -23,6 +23,7 @@ What`s to come in later versions
   - More ways to manipulate the data on the mySQL server
   - Program Updater
   - Ability for program to produce logs
+  - Better UI for inputing field name
 
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
 
