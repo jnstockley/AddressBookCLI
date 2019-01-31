@@ -18,6 +18,16 @@ What`s new in Version 1.0:
   - Re-designed back-end to handle new features and more to come in the future
   - Program should crash less often
   
+Version 1.0.1
+1. Bug Fixes
+  - Occupation now shows up when requeting data from person table
+  - Address ID didn`t show up correctly
+  - When updating data it would override all previous data
+  - Unable to leave field blank for keeping addressId and occupationId the same
+  - Small typos fixes
+2. New Feature
+  - Better UI for updating addressId and occupationId
+  
 What`s to come in later versions
   - RSA Encryption with public and private key
   - More ways to manipulate the data on the mySQL server
