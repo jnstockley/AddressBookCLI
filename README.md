@@ -24,7 +24,7 @@ What`s to come in later versions
   - Program Updater
   - Ability for program to produce logs
   - Better UI for inputing field name
-  - Ability to create new addresses and occupatiosn when adding a new person
+  - Ability to create new addresses and occupations when adding a new person
 
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
 
