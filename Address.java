@@ -6,11 +6,11 @@ import java.util.List;
  * 
  * @author Jack Stockely
  * 
- * @version 1.0
+ * @version 1.0.1
  * 
  * @description The Address object of the Address Book project
  * 
- * @date 30 January 2019
+ * @date 31 January 2019
  *
  */
 public class Address {
@@ -182,12 +182,13 @@ public class Address {
 			zip=address.getZip();
 		}
 		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE address SET number=?, name=?, city=?, state=?, zip=?");
+			PreparedStatement ps = conn.prepareStatement("UPDATE address SET number=?, name=?, city=?, state=?, zip=? WHERE id =?");
 			ps.setString(1, number);
 			ps.setString(2, name);
 			ps.setString(3, city);
 			ps.setString(4, state);
 			ps.setString(5,zip);
+			ps.setInt(6, id);
 			ps.executeUpdate();
 		}catch (Exception e) {
 			e.printStackTrace();

@@ -8,11 +8,11 @@ import java.util.List;
  * 
  * @author Jack Stockely
  * 
- * @version 1.0
+ * @version 1.0.1
  * 
  * @description The Person object of the Address Book project
  * 
- * @date 30 January 2019
+ * @date 31 January 2019
  *
  */
 public class Person {
@@ -107,7 +107,7 @@ public class Person {
 	 * last name, house number, the street name, the city, the state, the zip code, and the occupation of the given person
 	 */
 	public String toString() {
-		return "ID: " + this.getId() + " " + this.getFirstName() + " " + this.getMiddleInitial() + " " + this.getLastName() + ". " + this.getNumber() + " " + this.getName() + " " + this.getCity() + ", " + this.getState() + " " + this.getZip() + " " + this.getOccupation();
+		return "ID: " + this.getId() + " " + this.getFirstName() + " " + this.getMiddleInitial() + ". " + this.getLastName() + " " + this.getNumber() + " " + this.getName() + " " + this.getCity() + ", " + this.getState() + " " + this.getZip() + " " + this.getOccupation();
 	}
 
 	/**
@@ -118,11 +118,12 @@ public class Person {
 	public static List<Person> getAll(Connection conn){
 		try {
 			List<Person> people = new ArrayList<Person>();
-			PreparedStatement ps = conn.prepareStatement("SELECT person.id, person.firstName, person.middleInitial, person.lastName, address.number, address.name, address.city, address.state, address.zip, occupation.occupation from person inner join address on person.addressId=address.id inner join occupation on person.occupationId=occupation.id");
+			PreparedStatement ps = conn.prepareStatement("SELECT person.id, person.firstName, person.middleInitial, person.lastName, address.number, address.name, address.city, address.state, address.zip, occupation.occupation, address.Id, occupation.Id from person inner join address on person.addressId=address.id inner join occupation on person.occupationId=occupation.id");
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				Person person = new Person();
 				int col = 1;
+				person.setId(rs.getInt(col++));
 				person.setFirstName(rs.getString(col++));
 				person.setMiddleInitial(rs.getString(col++));
 				person.setLastName(rs.getString(col++));
@@ -132,6 +133,8 @@ public class Person {
 				person.setState(rs.getString(col++));
 				person.setZip(rs.getString(col++));
 				person.setOccupation(rs.getString(col++));
+				person.setAddressId(rs.getInt(col++));
+				person.setOccupationId(rs.getInt(col++));
 				people.add(person);
 			}
 			return people;
@@ -151,12 +154,13 @@ public class Person {
 	public static List<Person> getSimilar(Connection conn, String fieldName, String field){
 		try {
 			List<Person> people  = new ArrayList<Person>();
-			PreparedStatement ps = conn.prepareStatement("SELECT person.id, person.firstName, person.middleInitial, person.lastName, address.number, address.name, address.city, address.state, address.zip, occupation.occupation from person inner join address on person.addressId=address.id inner join occupation on person.occupationId=occupation.id WHERE person." + fieldName + " =?;");
+			PreparedStatement ps = conn.prepareStatement("SELECT person.id, person.firstName, person.middleInitial, person.lastName, address.number, address.name, address.city, address.state, address.zip, occupation.occupation, address.Id, occupation.Id from person inner join address on person.addressId=address.id inner join occupation on person.occupationId=occupation.id WHERE person." + fieldName + " =?;");
 			ps.setString(1, field);
 			ResultSet rs = ps.executeQuery();
 			while(rs.next()) {
 				Person person = new Person();
 				int col = 1;
+				person.setId(rs.getInt(col++));
 				person.setFirstName(rs.getString(col++));
 				person.setMiddleInitial(rs.getString(col++));
 				person.setLastName(rs.getString(col++));
@@ -166,6 +170,8 @@ public class Person {
 				person.setState(rs.getString(col++));
 				person.setZip(rs.getString(col++));
 				person.setOccupation(rs.getString(col++));
+				person.setAddressId(rs.getInt(col++));
+				person.setOccupationId(rs.getInt(col++));
 				people.add(person);
 			}
 			return people;
@@ -185,11 +191,12 @@ public class Person {
 	public static Person getBy(Connection conn, String fieldName, String field) {
 		try {
 			Person person = new Person();
-			PreparedStatement ps = conn.prepareStatement("SELECT person.id, person.firstName, person.middleInitial, person.lastName, address.number, address.name, address.city, address.state, address.zip, occupation.occupation from person inner join address on person.addressId=address.id inner join occupation on person.occupationId=occupation.id WHERE person." + fieldName + " =?;");
+			PreparedStatement ps = conn.prepareStatement("SELECT person.id, person.firstName, person.middleInitial, person.lastName, address.number, address.name, address.city, address.state, address.zip, occupation.occupation, address.Id, occupation.Id from person inner join address on person.addressId=address.id inner join occupation on person.occupationId=occupation.id WHERE person." + fieldName + " =?;");
 			ps.setString(1, field);
 			ResultSet rs = ps.executeQuery();
 			if(rs.next()) {
 				int col = 1;
+				person.setId(rs.getInt(col++));
 				person.setFirstName(rs.getString(col++));
 				person.setMiddleInitial(rs.getString(col++));
 				person.setLastName(rs.getString(col++));
@@ -199,6 +206,8 @@ public class Person {
 				person.setState(rs.getString(col++));
 				person.setZip(rs.getString(col++));
 				person.setOccupation(rs.getString(col++));
+				person.setAddressId(rs.getInt(col++));
+				person.setOccupationId(rs.getInt(col++));
 			}
 			return person;
 		}catch (Exception e) {
@@ -235,12 +244,13 @@ public class Person {
 			occupationId=person.getOccupationId();
 		}
 		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE person SET firstName=?, middleInitial=?, lastName=?, addressId=?, occupationId=?");
+			PreparedStatement ps = conn.prepareStatement("UPDATE person SET firstName=?, middleInitial=?, lastName=?, addressId=?, occupationId=? WHERE id = ?");
 			ps.setString(1, firstName);
 			ps.setString(2, middleInitial);
 			ps.setString(3, lastName);
 			ps.setInt(4, addressId);
 			ps.setInt(5, occupationId);
+			ps.setInt(6, id);
 			ps.executeUpdate();
 		}catch (Exception e) {
 			e.printStackTrace();

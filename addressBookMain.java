@@ -8,11 +8,11 @@ import com.mysql.jdbc.Connection;
  * 
  * @author Jack Stockley
  * 
- * @version 1.0
+ * @version 1.0.1
  * 
  * @description The main class of the Address Book which uses CRUD to modify data on a mySQL server
  * 
- * @date 30 January 2019
+ * @date 31 January 2019
  *
  */
 
@@ -166,7 +166,7 @@ public class addressBookMain {
 		console.nextLine();
 		System.out.print("Please enter the id of the occupation you want to update: ");
 		int id = console.nextInt();
-		System.out.print("Enter Occupation Name: ");
+		System.out.print("Enter new Occupation Name: ");
 		console.nextLine();
 		String occupationName = console.nextLine();
 		Occupation.update(conn, id, occupationName);		
@@ -249,19 +249,19 @@ public class addressBookMain {
 		getAllPeople(conn);
 		System.out.print("Please enter the id of the person you want to update: ");
 		int id = console.nextInt();
-		System.out.print("Enter First Name: ");
+		System.out.print("Enter new First Name: ");
 		console.nextLine();
 		String firstName = console.nextLine();
-		System.out.print("Enter Middle Initial: ");
+		System.out.print("Enter new Middle Initial: ");
 		String middleInitial = console.nextLine();
-		System.out.print("Enter Last Name: ");
+		System.out.print("Enter new Last Name: ");
 		String lastName = console.nextLine();
 		getAllAddresses(conn);
-		System.out.print("Enter New Address ID: ");
+		System.out.print("Enter new Address ID: (Type 0 to keep exisiting) ");
 		int addressId = console.nextInt();
 		console.nextLine();
 		getAllOccupations(conn);
-		System.out.print("Enter new Occupation ID:");
+		System.out.print("Enter new Occupation ID: (Type 0 to keep exisiting) ");
 		int occupationId = console.nextInt();
 		Person.update(conn, id, firstName, middleInitial, lastName, addressId, occupationId);		
 	}
@@ -339,7 +339,7 @@ public class addressBookMain {
 	 */
 	private static void updateAddress(Connection conn) {
 		getAllAddresses(conn);
-		System.out.print("Please enter the id of the address you want to update : ");
+		System.out.print("Please enter the id of the address you want to update: ");
 		console.nextLine();
 		int id = console.nextInt();
 		System.out.print("Enter new house number: ");

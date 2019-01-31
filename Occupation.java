@@ -8,11 +8,11 @@ import java.util.List;
  * 
  * @author Jack Stockely
  * 
- * @version 1.0
+ * @version 1.0.1
  * 
  * @description The Occupation object of the Address Book project
  * 
- * @date 30 January 2019
+ * @date 31 January 2019
  *
  */
 public class Occupation {
@@ -126,8 +126,9 @@ public class Occupation {
 			occupationName=occupation.getOccupation();
 		}
 		try {
-			PreparedStatement ps = conn.prepareStatement("UPDATE occupation SET occupation=?");
+			PreparedStatement ps = conn.prepareStatement("UPDATE occupation SET occupation=? WHERE id = ?");
 			ps.setString(1, occupationName);
+			ps.setInt(2, id);
 			ps.executeUpdate();
 		}catch (Exception e) {
 			e.printStackTrace();
