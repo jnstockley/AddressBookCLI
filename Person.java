@@ -8,7 +8,7 @@ import java.util.List;
  * 
  * @author Jack Stockely
  * 
- * @version 1.0.3
+ * @version 1.0.2
  * 
  * @description The Person object of the Address Book project
  * 
