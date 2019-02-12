@@ -8,11 +8,11 @@ import java.util.List;
  * 
  * @author Jack Stockely
  * 
- * @version 1.0.1
+ * @version 1.0.2
  * 
  * @description The Occupation object of the Address Book project
  * 
- * @date 31 January 2019
+ * @date 11 February 2019
  *
  */
 public class Occupation {

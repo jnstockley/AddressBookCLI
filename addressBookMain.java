@@ -8,11 +8,11 @@ import com.mysql.jdbc.Connection;
  * 
  * @author Jack Stockley
  * 
- * @version 1.0.1
+ * @version 1.0.2
  * 
  * @description The main class of the Address Book which uses CRUD to modify data on a mySQL server
  * 
- * @date 31 January 2019
+ * @date 11 February 2019
  *
  */
 
@@ -27,7 +27,7 @@ public class addressBookMain {
 	public static void main(String[] args) {
 		System.out.print("Welcome to the Address Book Program! Please type the IP address of the mySQL server you wish to connect to: ");
 		IP = console.nextLine();
-		System.out.println("Please enter the username then password for the mySQL at: " + IP + " address");
+		System.out.println("Please enter the username then password for the mySQL database at: " + IP + " address");
 		System.out.print("Username: ");
 		user = console.nextLine();
 		//Try Catch to mask the password in a console but allow password entry in IDE
@@ -50,6 +50,9 @@ public class addressBookMain {
 		while((table = getTableRequest()) != 0) {
 			redirecter(table,getMethodRequest());
 		}
+		System.out.println("Thank you for using the Address Book application created by Jack Stockely");
+		System.out.println("Find this project on github at: http://bit.ly/AddressBookJava");
+		System.exit(0);
 	}
 
 	/**
@@ -58,7 +61,7 @@ public class addressBookMain {
 	 */
 	private static int getTableRequest() {
 		int request = 0;
-		System.out.println("Which table would you like to access: " + System.lineSeparator() + "1. Address Table" + System.lineSeparator() + "2. Person Table" + System.lineSeparator() + "3. Occupation Table");
+		System.out.println("Which table would you like to access (Enter 0 to quit program): " + System.lineSeparator() + "1. Address Table" + System.lineSeparator() + "2. Person Table" + System.lineSeparator() + "3. Occupation Table");
 		request = console.nextInt();
 		return request;
 	}
@@ -69,7 +72,7 @@ public class addressBookMain {
 	 */
 	private static int getMethodRequest() {
 		int request = 0;
-		System.out.println("Please select an action to preform on the table: " + System.lineSeparator() + "1. Get all the Data" + System.lineSeparator() + "2. Get a Single Entry" + System.lineSeparator() + "3. Get Similiar Addresses" + System.lineSeparator() + "4. Update Data" + System.lineSeparator() + "5. Insert Data" + System.lineSeparator() + "6. Delete Data");
+		System.out.println("Please select an action to preform on the table (Enter 0 to go back): " + System.lineSeparator() + "1. Get all the Data" + System.lineSeparator() + "2. Get a Single Entry" + System.lineSeparator() + "3. Get Similiar Addresses" + System.lineSeparator() + "4. Update Data" + System.lineSeparator() + "5. Insert Data" + System.lineSeparator() + "6. Delete Data");
 		request = console.nextInt();
 		return request;
 	}
@@ -82,7 +85,9 @@ public class addressBookMain {
 	 */
 	private static void redirecter(int table, int method) {
 		if(table == 1) {
-			if(method == 1) {
+			if(method == 0) {
+				
+			}else if(method == 1) {
 				getAllAddresses(conn);
 			}else if(method == 2) {
 				getSingleAddress(conn);
@@ -98,7 +103,9 @@ public class addressBookMain {
 				System.out.println("Invalid method number: " + method);
 			}
 		}else if(table == 2) {
-			if(method == 1) {
+			if(method == 0) {
+				
+			}else if(method == 1) {
 				getAllPeople(conn);
 			}else if(method == 2) {
 				getSinglePerson(conn);
@@ -114,7 +121,9 @@ public class addressBookMain {
 				System.out.println("Invalid method number: " + method);
 			}
 		}else if(table == 3) {
-			if(method == 1) {
+			if(method == 0) {
+				
+			}else if(method == 1) {
 				getAllOccupations(conn);
 			}else if(method == 2) {
 				getSingleOccupation(conn);
