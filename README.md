@@ -1,5 +1,5 @@
 # AddressBook
-Address Book CLI Version 1.0.1!
+Address Book CLI Version 1.0.2!
 
 How to use this program:
 1. Run the program in command prompt or a termianl depending on which OS you are on
@@ -27,6 +27,14 @@ Version 1.0.1
   - Small typos fixes
 2. New Feature
   - Better UI for updating addressId and occupationId
+
+Version 1.0.2
+1. Improvments
+  - Better UI for closing program
+  - Better UI for going back to table selector
+  - Added Credit
+  - Added closing message
+  - Added link to github page
   
 What`s to come in later versions
   - RSA Encryption with public and private key
