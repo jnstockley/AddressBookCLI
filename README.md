@@ -25,11 +25,11 @@ Version 1.0.1
   - When updating data it would override all previous data
   - Unable to leave field blank for keeping addressId and occupationId the same
   - Small typos fixes
-2. New Feature
+2. New feature
   - Better UI for updating addressId and occupationId
 
 Version 1.0.2
-1. Improvments
+1. New features:
   - Better UI for closing program
   - Better UI for going back to table selector
   - Added Credit
