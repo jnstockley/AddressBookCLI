@@ -43,6 +43,7 @@ What`s to come in later versions
   - Ability for program to produce logs
   - Better UI for inputing field name
   - Ability to create new addresses and occupations when adding a new person
+  - Yubikey Support for auto-login/2fa
 
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
 
