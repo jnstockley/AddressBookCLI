@@ -42,6 +42,7 @@ What's to come in later versions
   - The ability for the program to produce logs
   - Better UI for inputting field name
   - Ability to create new addresses and occupations when adding a new person
+  - Better Handling of connection loss
 
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
 
