@@ -43,6 +43,7 @@ What's to come in later versions
   - Better UI for inputting field name
   - Ability to create new addresses and occupations when adding a new person
   - Better Handling of connection loss
+  - Check for duplicate entries
 
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
 
