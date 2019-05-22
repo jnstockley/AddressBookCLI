@@ -41,7 +41,7 @@ public class addressBookMain {
 
 		//Try Catch method to ensure the connection was successful
 		try {
-			conn = (Connection) DriverManager.getConnection("jdbc:mysql://"+IP+":3306/mydb",user,pass);
+			conn = (Connection) DriverManager.getConnection("jdbc:mysql://"+IP+":3306/mydb?useSSL=false",user,pass);
 		}catch (Exception e){
 			e.printStackTrace();
 			System.exit(1);
