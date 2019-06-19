@@ -1,4 +1,7 @@
 # AddressBook
+
+Important!!!!! This software will stop working correctly in the next couple of days. I will eventually fix this once I am able to get SSL working correctly. For the time being. Please use the web server located at https://jackstockely.live/AddressBookUI/ to make any changes. It is currently the only functioning way to add data that is encrypted on the server and in an SSL connection. Thank You!
+
 Address Book CLI Version 1.0.2!
    How to use this program:
    1. Run the program in command prompt or a terminal depending on which OS you are on
