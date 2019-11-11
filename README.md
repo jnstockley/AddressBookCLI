@@ -1,6 +1,19 @@
 # AddressBook
 
-Important!!!!! This software will stop working correctly in the next couple of days. I will eventually fix this once I am able to get SSL working correctly. For the time being. Please use the web server located at https://jackstockely.live/AddressBookUI/ to make any changes. It is currently the only functioning way to add data that is encrypted on the server and in an SSL connection. Thank You!
+Wow its been a while since I posted an update here! First off I am currently working on a version 2.0 which will include some major changes. Ill list a few bellow. That list is subject to change!
+
+Changes coming in version 2.0!
+   1. Logging system
+   2. Ability to add multiple addresses, occupations, and people at the same time
+   3. Ability to remove multiple addresses, occupations, and people at the same time
+   4. Ability to update multiple addresses, occupation, and people at the same time
+   5. More fields for addresses, occupations, people,
+      Ex. occupation now has Company Name, Job Title, Employment Type, Monthly Salary, and Industry
+   6. Better formating for displaying data in cosnole.
+   7. Possible way to run .jar in a web broweser (Havent looked into this just a possibility)
+   8. Checking that data was succeffuly added, removed, updated from server
+   9. New database name that reflect what the program does
+   10. Bug fixes and overall better improvements!
 
 Address Book CLI Version 1.0.2!
    How to use this program:
