@@ -1,6 +1,6 @@
 # AddressBook
 
-Wow its been a while since I posted an update here! First off I am currently working on a version 2.0 which will include some major changes. Ill list a few bellow. That list is subject to change!
+Wow its been a while since I posted an update here! First off I am currently working on a version 2.0 which will include some major changes. Ill list a few bellow. That list is subject to change! Also I am looking for some beta testers. I will release a beta version of this in the coming weeks. If youd like to be on the list tweet on @jackstockley_ or add your request to the beta tester issue!
 
 Changes coming in version 2.0!
    1. Logging system
@@ -13,7 +13,8 @@ Changes coming in version 2.0!
    7. Possible way to run .jar in a web broweser (Havent looked into this just a possibility)
    8. Checking that data was succeffuly added, removed, updated from server
    9. New database name that reflect what the program does
-   10. Bug fixes and overall better improvements!
+   10. Ability to save connections
+   11. Bug fixes and overall better improvements!
 
 Address Book CLI Version 1.0.2!
    How to use this program:
