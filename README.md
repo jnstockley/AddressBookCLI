@@ -2,6 +2,10 @@
 
 Wow its been a while since I posted an update here! First off I am currently working on a version 2.0 which will include some major changes. Ill list a few bellow. That list is subject to change! Also I am looking for some beta testers. I will release a beta version of this in the coming weeks. If youd like to be on the list tweet on @jackstockley_ or add your request to the beta tester issue!
 
+Mini Update!!
+   I have 90% of the backend written, need to test it out still! I am starting to write the frontend of the sotware now! 
+   I will relase a beta jar of addressBook 2.0 when I have done some testing! Stay Tuned!
+
 Changes coming in version 2.0!
    1. Logging system ✔️
    2. Ability to add multiple addresses, occupations, and people at the same time ✔️
