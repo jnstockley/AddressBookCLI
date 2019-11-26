@@ -8,12 +8,15 @@ Mini Update!!
 
 Mini Update #2!!
    I have the backend written, I have 90% of frontend written, I have done some basic testing to make sure backend works best    case senario. I have found some bugs, some I have fixed others I will fix. I was hoping to release a beta tonight but a        stupid bug got in the way. I will try to release a beat tomorrow. No promises. Also I have added some new features that I      will start to work on. Some will not be available in the first beta but will be by release!
+   
+Mini Update #3!!
+   I have uploaded a very early verision of address book version 2.0! Please expect bugs and report them here on the issues tab!
 
 Changes coming in version 2.0!
    1. Logging system ✔️
    2. Ability to add multiple addresses, occupations, and people at the same time ✔️
    3. Ability to remove multiple addresses, occupations, and people at the same time ✔️
-   4. Ability to update multiple addresses, occupation, and people at the same time
+   4. Ability to update multiple addresses, occupation, and people at the same time ✔️
    5. More fields for addresses, occupations, people,
       Ex. occupation now has Company Name, Job Title, Employment Type, Monthly Salary, and Industry ✔️
    6. Better formating for displaying data in cosnole.
