@@ -6,6 +6,9 @@ Mini Update!!
    I have 90% of the backend written, need to test it out still! I am starting to write the frontend of the sotware now! 
    I will relase a beta jar of addressBook 2.0 when I have done some testing! Stay Tuned!
 
+Mini Update #2!!
+   I have the backend written, I have 90% of frontend written, I have done some basic testing to make sure backend works best    case senario. I have found some bugs, some I have fixed others I will fix. I was hoping to release a beta tonight but a        stupid bug got in the way. I will try to release a beat tomorrow. No promises. Also I have added some new features that I      will start to work on. Some will not be available in the first beta but will be by release!
+
 Changes coming in version 2.0!
    1. Logging system ✔️
    2. Ability to add multiple addresses, occupations, and people at the same time ✔️
@@ -19,7 +22,11 @@ Changes coming in version 2.0!
    9. New database name that reflect what the program does ✔️
    10. Ability to save connections ✔️
    11. Bug fixes and overall better improvements!
-
+   12. AES Encryption
+   13. Program Updater
+   14. Check to see if entry already exists
+   15. Ability to create new addresses and occupations when adding a new person ✔️
+   
 Address Book CLI Version 1.0.2!
    How to use this program:
    1. Run the program in command prompt or a terminal depending on which OS you are on
