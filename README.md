@@ -11,6 +11,16 @@ Mini Update #2!!
    
 Mini Update #3!!
    I have uploaded a very early verision of address book version 2.0! Please expect bugs and report them here on the issues tab!
+   
+Mini Update #4!!
+   I have uploaded a new version which has bug fixes and improvements! Below is a list of the major changes in this new version! More to come!!
+   1. Fixed bug when getting address, occupations, people by a field that could have a space in it
+   2. When getting address, occupation, or person by date or tiem field displayed format
+   3. Added validation for getting by IDs and adding ID to people
+   4. Capitalized words when added to database
+   5. Fixed bug when adding multiple address, occupations, people where the user needed to hit the enter key to add another address, occupation, or person
+   6. Changed remove similar to remove singular 
+   7. When removing data it showed two success messages
 
 Changes coming in version 2.0!
    1. Logging system ✔️
