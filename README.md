@@ -33,15 +33,14 @@ Changes coming in version 2.0!
    5. More fields for addresses, occupations, people,
       Ex. occupation now has Company Name, Job Title, Employment Type, Monthly Salary, and Industry ✔️
    6. Better formating for displaying data in cosnole.
-   7. Possible way to run .jar in a web broweser (Havent looked into this just a possibility)
-   8. Checking that data was succeffuly added, removed, updated from server ✔️
-   9. New database name that reflect what the program does ✔️
-   10. Ability to save connections ✔️
-   11. Bug fixes and overall better improvements!
-   12. AES Encryption
-   13. Program Updater
-   14. Check to see if entry already exists
-   15. Ability to create new addresses and occupations when adding a new person ✔️
+   7. Checking that data was succeffuly added, removed, updated from server ✔️
+   8. New database name that reflect what the program does ✔️
+   9. Ability to save connections ✔️
+   10. Bug fixes and overall better improvements!
+   11. AES Encryption
+   12. Program Updater
+   13. Check to see if entry already exists
+   14. Ability to create new addresses and occupations when adding a new person ✔️
    
 Address Book CLI Version 1.0.2!
    How to use this program:
