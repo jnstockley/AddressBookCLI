@@ -14,6 +14,9 @@ Mini Update #3!!
    
 Mini Update #4!!
    I have uploaded a new version which has bug fixes and improvements! Below is a list of the major changes in this new version! More to come!!
+   
+Mini Update #5!!
+   I have uploaded a zip file containing a new jar file and a csv file. The csv file contains an encrypted login for you to play with. I have also re-done the save connections function to use salting. Please test this new file out!
    1. Fixed bug when getting address, occupations, people by a field that could have a space in it
    2. When getting address, occupation, or person by date or tiem field displayed format
    3. Added validation for getting by IDs and adding ID to people
