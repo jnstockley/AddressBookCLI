@@ -13,10 +13,7 @@ Mini Update #3!!
    I have uploaded a very early verision of address book version 2.0! Please expect bugs and report them here on the issues tab!
    
 Mini Update #4!!
-   I have uploaded a new version which has bug fixes and improvements! Below is a list of the major changes in this new version! More to come!!
-   
-Mini Update #5!!
-   I have uploaded a zip file containing a new jar file and a csv file. The csv file contains an encrypted login for you to play with. I have also re-done the save connections function to use salting. Please test this new file out!
+   I have uploaded a new version which has bug fixes and improvements! Below is a list of the major changes in this new version! More to come!
    1. Fixed bug when getting address, occupations, people by a field that could have a space in it
    2. When getting address, occupation, or person by date or tiem field displayed format
    3. Added validation for getting by IDs and adding ID to people
@@ -24,6 +21,12 @@ Mini Update #5!!
    5. Fixed bug when adding multiple address, occupations, people where the user needed to hit the enter key to add another address, occupation, or person
    6. Changed remove similar to remove singular 
    7. When removing data it showed two success messages
+  
+Mini Update #5!!
+   I have uploaded a zip file containing a new jar file and a csv file. The csv file contains an encrypted login for you to play with. I have also re-done the save connections function to use salting. Please test this new file out!
+   
+Mini Update #6!!
+   I have uploaded a new zip file containing a new beta version of addressbook v2 and a new csv file. In the new version I have redone the handleing of everything to do with connections and the csv file and added a handy testing mode to allow the tetser to connect to my database while allowing them to use the full program!
 
 Changes coming in version 2.0!
    1. Logging system ✔️
