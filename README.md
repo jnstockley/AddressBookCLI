@@ -27,23 +27,55 @@ Mini Update #5!!
    
 Mini Update #6!!
    I have uploaded a new zip file containing a new beta version of addressbook v2 and a new csv file. In the new version I have redone the handleing of everything to do with connections and the csv file and added a handy testing mode to allow the tetser to connect to my database while allowing them to use the full program!
+   
+Mini Update #7!!
+   I have made some small improvments to the next version! There are some known bugs that I need to fix! I have deleted the changes to come in version 2.0 section and replaced it with a list of changes I have made and improvements/bugs that I am still working on!
 
-Changes coming in version 2.0!
-   1. Logging system ✔️
-   2. Ability to add multiple addresses, occupations, and people at the same time ✔️
-   3. Ability to remove multiple addresses, occupations, and people at the same time ✔️
-   4. Ability to update multiple addresses, occupation, and people at the same time ✔️
-   5. More fields for addresses, occupations, people,
-      Ex. occupation now has Company Name, Job Title, Employment Type, Monthly Salary, and Industry ✔️
-   6. Better formating for displaying data in cosnole.
-   7. Checking that data was succeffuly added, removed, updated from server ✔️
-   8. New database name that reflect what the program does ✔️
-   9. Ability to save connections ✔️
-   10. Bug fixes and overall better improvements!
-   11. AES Encryption
-   12. Program Updater
-   13. Check to see if entry already exists
-   14. Ability to create new addresses and occupations when adding a new person ✔️
+Improvements Since V 1.0.2 and during development of V2.0
+	Logging system
+	Ability to add multiple addresses, occupations, and people at the same time
+	Ability to remove multiple addresses, occupations, and people at the same time
+	Ability to update multiple addresses, occupation, and people at the same time
+	More fields for addresses, occupations, people, Ex. occupation now has Company Name, Job Title, Employment Type, Monthly Salary, and Industry
+	Checking that data was succeffuly added, removed, updated from server
+	New database name that reflect what the program does
+	Ability to save connections
+	Ability to create new addresses and occupations when adding a new person
+	Saved connection doesn’t check for duplicate entries
+	Change next to nextLine in get similar
+	Add ability to remove a save connection
+	Capitalize words when entered into database
+	When inserting multiple addresses after first address is added need to press enter to be able to create next address
+	Change remove similar to remove singular show full address not just id
+	When removing address it shows two different removed messages 
+	Bug with database doesn’t show 0 in house number or zip code 
+	Added space in between address, occupation, person
+	Added ability to continuously go through program
+	Hashed passwords
+	Used CSV file for saving connections
+
+Imporvements that are still needed/ know bugs
+	Validation checking for ids
+	Add ability to close program or go back a page
+	Add timer for 10 sec if no response maybe???
+	Add salting to passwords
+	getSimilar doesn’t print anything!!!!
+	Better formatting when printing ID for getSingular
+	Better formatting for printing person
+	Better formating for displaying data in cosnole.
+	Bug fixes and overall better improvements!
+	AES Encryption
+	Program Updater?
+	Check to see if entry already exists
+	Form validation when updaing/creating entries
+	Printing formating new line, colors, punctuation marks
+	Add abilty to change addressId and occupationId and show addresses and occupations when updating person
+	Add backend update multiple
+	Create separate functions for adding addressId and occupationId
+	Split fileds likeFistName into two words when displaying field
+	Add regular expression check on IP
+	Add option to change default database name
+	
    
 Address Book CLI Version 1.0.2!
    How to use this program:
