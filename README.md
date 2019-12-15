@@ -32,49 +32,49 @@ Mini Update #7!!
    I have made some small improvments to the next version! There are some known bugs that I need to fix! I have deleted the changes to come in version 2.0 section and replaced it with a list of changes I have made and improvements/bugs that I am still working on!
 
 Improvements Since V 1.0.2 and during development of V2.0:
-	1. Logging system
-	2. Ability to add multiple addresses, occupations, and people at the same time
-	3. Ability to remove multiple addresses, occupations, and people at the same time
-	4. Ability to update multiple addresses, occupation, and people at the same time
-	5. More fields for addresses, occupations, people, Ex. occupation now has Company Name, Job Title, Employment Type, Monthly Salary, and Industry
-	6. Checking that data was succeffuly added, removed, updated from server
-	7. New database name that reflect what the program does
-	8. Ability to save connections
-	9. Ability to create new addresses and occupations when adding a new person
-	10. Saved connection doesn’t check for duplicate entries
-	11. Change next to nextLine in get similar
-	12. Add ability to remove a save connection
-	13. Capitalize words when entered into database
-	14. When inserting multiple addresses after first address is added need to press enter to be able to create next address
-	15. Change remove similar to remove singular show full address not just id
-	16. When removing address it shows two different removed messages 
-	17. Bug with database doesn’t show 0 in house number or zip code 
-	18. Added space in between address, occupation, person
-	19. Added ability to continuously go through program
-	20. Hashed passwords
-	21. Used CSV file for saving connections
+1. Logging system
+2. Ability to add multiple addresses, occupations, and people at the same time
+3. Ability to remove multiple addresses, occupations, and people at the same time
+4. Ability to update multiple addresses, occupation, and people at the same time
+5. More fields for addresses, occupations, people, Ex. occupation now has Company Name, Job Title, Employment Type, Monthly Salary, and Industry
+6. Checking that data was succeffuly added, removed, updated from server
+7. New database name that reflect what the program does
+8. Ability to save connections
+9. Ability to create new addresses and occupations when adding a new person
+10. Saved connection doesn’t check for duplicate entries
+11. Change next to nextLine in get similar
+12. Add ability to remove a save connection
+13. Capitalize words when entered into database
+14. When inserting multiple addresses after first address is added need to press enter to be able to create next address
+15. Change remove similar to remove singular show full address not just id
+16. When removing address it shows two different removed messages 
+17. Bug with database doesn’t show 0 in house number or zip code 
+18. Added space in between address, occupation, person
+19. Added ability to continuously go through program
+20. Hashed passwords
+21. Used CSV file for saving connections
 
 Imporvements that are still needed/ know bugs:
-	1. Validation checking for ids
-	2. Add ability to close program or go back a page
-	3. Add timer for 10 sec if no response maybe???
-	4. Add salting to passwords
-	5. getSimilar doesn’t print anything!!!!
-	6. Better formatting when printing ID for getSingular
-	7. Better formatting for printing person
-	8. Better formating for displaying data in cosnole.
-	9. Bug fixes and overall better improvements!
-	10. AES Encryption
-	11. Program Updater?
-	12. Check to see if entry already exists
-	13. Form validation when updaing/creating entries
-	14. Printing formating new line, colors, punctuation marks
-	15. Add abilty to change addressId and occupationId and show addresses and occupations when updating person
-	16. Add backend update multiple
-	17. Create separate functions for adding addressId and occupationId
-	18. Split fileds likeFistName into two words when displaying field
-	19. Add regular expression check on IP
-	20. Add option to change default database name
+1. Validation checking for ids
+2. Add ability to close program or go back a page
+3. Add timer for 10 sec if no response maybe???
+4. Add salting to passwords
+5. getSimilar doesn’t print anything!!!!
+6. Better formatting when printing ID for getSingular
+7. Better formatting for printing person
+8. Better formating for displaying data in cosnole.
+9. Bug fixes and overall better improvements!
+10. AES Encryption
+11. Program Updater?
+12. Check to see if entry already exists
+13. Form validation when updaing/creating entries
+14. Printing formating new line, colors, punctuation marks
+15. Add abilty to change addressId and occupationId and show addresses and occupations when updating person
+16. Add backend update multiple
+17. Create separate functions for adding addressId and occupationId
+18. Split fileds likeFistName into two words when displaying field
+19. Add regular expression check on IP
+20. Add option to change default database name
 	
    
 Address Book CLI Version 1.0.2!
