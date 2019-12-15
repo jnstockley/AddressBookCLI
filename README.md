@@ -29,7 +29,7 @@ Mini Update #6!!
    I have uploaded a new zip file containing a new beta version of addressbook v2 and a new csv file. In the new version I have redone the handleing of everything to do with connections and the csv file and added a handy testing mode to allow the tetser to connect to my database while allowing them to use the full program!
    
 Mini Update #7!!
-   I have made some small improvments to the next version! There are some known bugs that I need to fix! I have deleted the changes to come in version 2.0 section and replaced it with a list of changes I have made and improvements/bugs that I am still working on!
+   I have made some small improvments to the next version! There are some known bugs that I need to fix! I have deleted the changes to come in version 2.0 section and replaced it with a list of changes I have made and improvements/bugs that I am still working on! I have also deleted the change logs for older version of address book expcept version 1.0.2
 
 Improvements Since V 1.0.2 and during development of V2.0:
 1. Logging system
@@ -84,27 +84,6 @@ Address Book CLI Version 1.0.2!
    3. Enter the user name and password
    4. Select which table and which method you want to use (Type 0 to exit program)
 
-What's new in Version 1.0:
- 1. New features:
-  - Added ability to work with any SQL server
-  - Added ability to enter personal username and password
-  - When typing in the password, the password is hidden
-  - Added ability to get multiple address, occupations, and people, with similar fields
-  - Re-designed CLI
- 2. Bug Fixes and many performance improvements
-   - Re-designed back-end to handle new features and more to come in the future
-   - The program should crash less often
-
-Version 1.0.1
- 1. Bug Fixes
-   - Occupation now shows up when requesting data from person table
-   - Address ID didn't show up correctly
-   - When updating data it would override all previous data
-   - Unable to leave field blank for keeping addressId and occupationId the same
-   - Small typos fixes
- 2. New feature
-  - Better UI for updating addressId and occupationId
-
 Version 1.0.2
  1. New features:
   - Better UI for closing the program
@@ -112,16 +91,6 @@ Version 1.0.2
   - Added Credit
   - Added closing message
   - Added link to GitHub page
-
-What's to come in later versions
-  - RSA Encryption with a public and private key
-  - More ways to manipulate the data on the MySQL server
-  - Program Updater
-  - The ability for the program to produce logs
-  - Better UI for inputting field name
-  - Ability to create new addresses and occupations when adding a new person
-  - Better Handling of connection loss
-  - Check for duplicate entries
 
 Any other questions tweet me on twitter @jackstockley_ and Ill add it here
 
