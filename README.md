@@ -31,7 +31,7 @@ Mini Update #6!!
 Mini Update #7!!
    I have made some small improvments to the next version! There are some known bugs that I need to fix! I have deleted the changes to come in version 2.0 section and replaced it with a list of changes I have made and improvements/bugs that I am still working on!
 
-Improvements Since V 1.0.2 and during development of V2.0
+Improvements Since V 1.0.2 and during development of V2.0:
 	1. Logging system
 	2. Ability to add multiple addresses, occupations, and people at the same time
 	3. Ability to remove multiple addresses, occupations, and people at the same time
@@ -54,7 +54,7 @@ Improvements Since V 1.0.2 and during development of V2.0
 	20. Hashed passwords
 	21. Used CSV file for saving connections
 
-Imporvements that are still needed/ know bugs
+Imporvements that are still needed/ know bugs:
 	1. Validation checking for ids
 	2. Add ability to close program or go back a page
 	3. Add timer for 10 sec if no response maybe???
