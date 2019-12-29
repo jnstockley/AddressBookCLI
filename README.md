@@ -75,6 +75,21 @@ Imporvements that are still needed/ know bugs:
 18. Split fileds likeFistName into two words when displaying field
 19. Add regular expression check on IP
 20. Add option to change default database name
+
+Mini Update #8!!
+I have uploaded a new version! I know its been a while and this version has a fair amount of changes! Please expect many bugs and report them under the issues tab! 
+Improvments since last version:
+1. Added ability to change addressId and occupationId and show addresses and occupations when updating person
+2. Added ability to create new occupation/address when updating person
+3. Added regular expression check on IP	
+4. Fixed getSimilar()
+5. Added new way of reading data in to improve reliability
+6. Added option to change default database name
+7. Added salting to passwords
+8. Added ability to close program or go back a page
+9. Check to see if entry already exists
+10. Split fields likeFistName into two words when displaying field
+11. Added backend update multiple
 	
    
 Address Book CLI Version 1.0.2!
