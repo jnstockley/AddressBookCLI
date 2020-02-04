@@ -90,6 +90,15 @@ Improvments since last version:
 9. Check to see if entry already exists
 10. Split fields likeFistName into two words when displaying field
 11. Added backend update multiple
+
+Update 9!!!
+Sorry its been a while since i posted an update been busy with the new semester and not in a coding mood! I have posted a much needed update! This update focused on imrpoving the connection saving and retireving behavior! Notiable imporvemnts are:
+1. Fix saved locations - log and connection file will be saved in same location as jar file
+2. Improved UI for connecting and removing connections etc.
+3. Added option to connect to server without saving a connection
+4. Fixed a bug where when creating a new save conenction it would overwite old connection
+5. Fixed bug when removing connection would remove salt
+6. Added ability to save a connection to .csv file without conencting to server!
 	
    
 Address Book CLI Version 1.0.2!
