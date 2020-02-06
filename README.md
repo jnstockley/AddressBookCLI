@@ -99,7 +99,35 @@ Sorry its been a while since i posted an update been busy with the new semester 
 4. Fixed a bug where when creating a new save conenction it would overwite old connection
 5. Fixed bug when removing connection would remove salt
 6. Added ability to save a connection to .csv file without conencting to server!
-	
+
+Update 10!!
+I have posted yet another version of the program version 0.8! This will probally be the lateste version for a couple weeks! In this version I have fixed all the known bugs with the address part of the program and made some minor improvemnts to the conenction handler and backend of the program! Change log will be down below! Please test and report bugs on the address part of the program first!
+
+Change Log!
+1.	Fix save location of files!!
+2.	Re-order connection listing!!
+3.	Add option when creating save connection to either connect or not to connect
+4.	Add option to not save connection
+5.	BUG When creating new connection overwrites old one
+6.	When entering invalid number in connection id menu program crashes and doesn’t display error in console added ability for it to log error
+8.	Program crashes when checking for update instead of doing something peaceful
+9.	Program still prints out connection when using existing connection
+10.	Better formatting when printing address match US postage??
+11.	Add response when get by… is null address
+12.	Add space between get by data and data for  get by… address
+13.	Add specific message when wanted int or string in fields get by fields update singular address
+14.	Better formatting for get singular address	
+15.	Better formatting for update singular??? Move enter ID bellow data address
+16.	Error updating singular address! Data added right returns null and no error message in log
+17.	Update multiple doesn’t ask which ID you want to update first!!!!!! Couldn’t test rest of feature!!!! Dummy address
+18.	Insert singular returns null when data has been saved to DB
+19.	Duplicate checking doesn’t work for insert singular or update singular
+20.	Add message when saying going onto second third… address when insert multiple	
+21.	Insert multiple = fucked!!! Overrides first entry with second entry spelling mistake long - log. Returns 3 different error messages!! Doesn’t log anything in log file address
+22.	Remove singular fix ui move select address to bottom address
+23.	Remove multiple addresses doesn’t return messages on success
+
+
    
 Address Book CLI Version 1.0.2!
    How to use this program:
