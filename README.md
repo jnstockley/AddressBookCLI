@@ -127,6 +127,30 @@ Change Log!
 22.	Remove singular fix ui move select address to bottom address
 23.	Remove multiple addresses doesn’t return messages on success
 
+Update 11!!
+I have just recently posted version 1.82! This update fixes all of the bugs I am aware of with occupation and makes some quality of life updates to the address part of app. It also fixes a bug where when you changed tables the program would crash! Full Change log below!
+1.	 Check for empty string in insert singular!!
+2.	Add success message for remove multiple
+3.	getByField add new line after enter data and data
+4.	getByField enter data -> please enter data for “FIELD”
+5.	when printing data no space between company name and “Job Title”
+6.	getByField improve searching for monthly salary (not able to test)
+7.	getByField add message when no data matching	8.	Add space in between no matching data and want to quit address and occupation!!
+9.	getSingular improve cli to match address
+10.	getSingular add spacer between id and data address and occupation
+11.	insertSingular and multiple lowercase field names
+12.	insertSingular add new line between added occupation data and data and want to quit
+13.	Error when going back a table and selecting method (out of bounds error)
+14.	insertSingular and insertMultiple change add to insert 
+15.	insertMultiple add which occupation number user is on
+16.	insertMultiple error gives 3 error no log. Same issue as address version? Overrides first data with second data but adds data to database
+17.	improve cli for update singular and update multiple to match address version
+18.	updateSingular returns old occupation and not new one and doesn’t update occupation on database
+19.	updateMultiple show max num occupations to update	
+20.	updateMultiple crashes no error message log nullpinterexception
+21.	updateMultiple doesn’t ask for id to update
+22.	remove singular add space between occupations
+23.	removeMultiple show maxNum occupations and address to remove
 
    
 Address Book CLI Version 1.0.2!
