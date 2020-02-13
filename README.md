@@ -152,6 +152,11 @@ I have just recently posted version 1.82! This update fixes all of the bugs I am
 22.	remove singular add space between occupations
 23.	removeMultiple show maxNum occupations and address to remove
 
+Mini Update 12!
+  I have just uploaded a new version of the program with no bug fixes but I have added some new features to the program! Change log below!
+   1. Added possibilty to search for address and occupation by including just hour, minute or second or a mixture of all 3
+   2. When updating multiple addresses or occupations the program will remove the address or occupation you just updated from the display!
+
    
 Address Book CLI Version 1.0.2!
    How to use this program:
