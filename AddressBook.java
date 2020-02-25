@@ -31,9 +31,9 @@ public class AddressBook {
 		try {
 			double appVersion = 2.00;
 			Connection conn = null;
-			boolean running = false;
+			boolean running = true;
 			while (running) {
-				boolean testingMode = true;
+				boolean testingMode = false;
 				String fileName = "SavedConnections.csv";
 				BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 				Console passwordReader = System.console();
