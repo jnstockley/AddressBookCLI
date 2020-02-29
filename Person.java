@@ -666,7 +666,7 @@ public class Person {
 					ps.setString(1, newPerson.getFirstName());
 					ps.setString(2, newPerson.getMiddleName());
 					ps.setString(3, newPerson.getLastName());
-					ps.setString(4, newPerson.getHomeEmail());
+					ps.setString(4, newPerson.getHomePhone());
 					ps.setString(5, newPerson.getMobilePhone());
 					ps.setString(6, newPerson.getWorkPhone());
 					ps.setString(7, newPerson.getHomeEmail());

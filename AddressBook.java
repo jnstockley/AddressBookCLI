@@ -29,7 +29,7 @@ public class AddressBook {
 	 */
 	public static void main(String[] args) {
 		try {
-			double appVersion = 2.00;
+			double appVersion = 2.01;
 			Connection conn = null;
 			boolean running = true;
 			while (running) {
