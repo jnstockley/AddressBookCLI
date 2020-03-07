@@ -39,12 +39,10 @@ This is the biggest update since I have release the first address book!
    - Pretty much any operating system that supports java version 8 or newer. That included Mac, Windows, Linux and possibly Andriod!
    
 - When will the REST inteface and the AngularJS version of this be updated?
-  - Currently I do not have any ETA for when these will be updated but I wil defiently start working on updating these pieces of software starting with the REST interface since it is the backbone of th AngularJS version
+  - They have recently been update! You can check out the RESTful interface at http://jackstockleyiowa.ddns.net:8080/AddressBookREST and the AddressBookUI at http://jackstockleyiowa.ddns.net/AddressBookUI
   
 - Will you continue to update this software with new features and bug fixes?
-  - Yes of course, I do still have some features I plan on adding at some point but my priorty will be focused on updating the REST and Angular JS parts of the software.
+  - Yes of course, I do still have some features I plan on adding at some point. Right now I am planning on updating the backend on both the REST interface and CLI and converting the CLI into a maven project
   
 - Do you have documention on the code?
   - Yes all the code I have written is public with comments as well as a java doc for the whole program. To view the javadoc you can go to https://jnstockley.github.io/AddressBook/
- 
- Warning any data saved to the MySQL database will be deleted in the next couple of days and be replaced with data to play around with! If any data is important to you please make a copy of the data ASAP!
