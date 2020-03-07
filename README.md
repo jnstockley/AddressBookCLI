@@ -36,7 +36,7 @@ This is the biggest update since I have release the first address book!
     - You will need to have java version 8 or newer installed on your computer and then all you need to do is to open a terminal or command prompt and type `java -jar *dirrectory to the jar file*`
  
  - What operating systems are supported?
-   - Pretty much any operating system that supports java version 8 or newer. That included Mac, Windows, Linux and possibly Andriod!
+   - Pretty much any operating system that supports java version 8 or newer. That includes Mac, Windows, Linux and possibly Andriod!
    
 - When will the REST inteface and the AngularJS version of this be updated?
   - They have recently been update! You can check out the RESTful interface at http://jackstockleyiowa.ddns.net:8080/AddressBookREST and the AddressBookUI at http://jackstockleyiowa.ddns.net/AddressBookUI
