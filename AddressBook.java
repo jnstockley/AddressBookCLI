@@ -16,7 +16,7 @@ import org.apache.commons.lang3.text.WordUtils;
  * This program allows a user to interact with an address book that is saved on a MySQL database over the Internet!
  * @author jnstockley
  * @version 2.00
- * 
+ *
  */
 
 @SuppressWarnings("deprecation")
@@ -29,7 +29,7 @@ public class AddressBook {
 	 */
 	public static void main(String[] args) {
 		try {
-			double appVersion = 2.01;
+			double appVersion = 2.02;
 			Connection conn = null;
 			boolean running = true;
 			while (running) {
@@ -61,18 +61,18 @@ public class AddressBook {
 					Helper.log("Invalid Connection type selected", "AddressBook.java", "main()");
 				}
 				if (testingMode) {
-					conn = (Connection)DriverManager.getConnection("jdbc:mysql://jackstockleyiowa.ddns.net/addressBook?user=Jack&password=Dr1v3r0o");
+					conn = (Connection)DriverManager.getConnection("jdbc:mysql://jackstockleyiowa.ddns.net/addressBook?user=Jack&password=password&serverTimezone=UTC");
 				} else {
 					conn = ConnectionHelper.connectionBuilder(connection);
-				} 
+				}
 				while (running) { //Allows the user to select a table and method to interact with the database keeps running until the user quits by entering 0
 					List<String> selection = selector(reader, conn);
 					printTable(conn, selection.get(0), selection.get(1), reader);
 					System.out.print("Do you want to quit the program? (Y/N): ");
 					String quit = reader.readLine();
 					if (quit.equalsIgnoreCase("y"))
-						running = false; 
-				} 
+						running = false;
+				}
 			}
 			quit(conn);
 		} catch (Exception e) {
@@ -99,7 +99,7 @@ public class AddressBook {
 		} catch (Exception e) {
 			Helper.log(e, "AddressBook.java", "connectionHandler()");
 			return 0;
-		} 
+		}
 	}
 
 	/**
@@ -118,7 +118,7 @@ public class AddressBook {
 	}
 
 	/**
-	 * Allows the user to select which table they want to interact with 
+	 * Allows the user to select which table they want to interact with
 	 * @param reader How I am reading data from the console
 	 * @param conn The MySQL connection
 	 * @return A string corresponding to which table the user wants to interact with
@@ -129,22 +129,22 @@ public class AddressBook {
 			PreparedStatement ps = conn.prepareStatement("SHOW TABLES");
 			ResultSet rs = ps.executeQuery();
 			while (rs.next()) //Gets all the table names from the database
-				tables.add(WordUtils.capitalize(rs.getString(1))); 
+				tables.add(WordUtils.capitalize(rs.getString(1)));
 			System.out.println("Please select a table from below (Enter 0 to quit): ");
 			int tableId = 1;
 			for (String item : tables) { //Prints out all the tables
 				System.out.println(String.valueOf(tableId) + ": " + item);
 				tableId++;
-			} 
+			}
 			int selectedTable = Integer.parseInt(reader.readLine());
 			if (selectedTable == 0)
-				quit(conn); 
+				quit(conn);
 			return tables.get(selectedTable - 1);
 		} catch (Exception e) {
 			System.out.println("Error in selecting table. Please check the log!");
 			Helper.log(e, "AddressBook.java", "getTable(");
 			return null;
-		} 
+		}
 	}
 
 	/**
@@ -162,7 +162,7 @@ public class AddressBook {
 			for (String item : methods) { //Prints all the methods
 				System.out.println(String.valueOf(methodId) + ": " + item);
 				methodId++;
-			} 
+			}
 			int method = Integer.parseInt(reader.readLine());
 			while(method==0) { //Allows user to change table
 				getTable(reader, conn);
@@ -170,7 +170,7 @@ public class AddressBook {
 				for (String item : methods) {
 					System.out.println(String.valueOf(methodId) + ": " + item);
 					methodId++;
-				} 
+				}
 				method = Integer.parseInt(reader.readLine());
 			}
 			return methods.get(method-1);
@@ -178,7 +178,7 @@ public class AddressBook {
 			System.out.println("Error in selecting method. Please check the log!");
 			Helper.log(e, "AddressBook.java", "getMethod()");
 			return null;
-		} 
+		}
 	}
 
 	/**
@@ -196,7 +196,7 @@ public class AddressBook {
 				OccupationHelper.getAllOccupations(conn);
 			} else if (table.equals("Person")) {
 				PersonHelper.getAllPeople(conn);
-			} 
+			}
 		} else if (method.equals("Get By Field")) {
 			if (table.equals("Address")) {
 				AddressHelper.getSimilarAddresses(conn, reader);
@@ -204,7 +204,7 @@ public class AddressBook {
 				OccupationHelper.getSimilarOccupations(conn, reader);
 			} else if (table.equals("Person")) {
 				PersonHelper.getSimilarPeople(conn, reader);
-			} 
+			}
 		} else if (method.equals("Get Singular")) {
 			if (table.equals("Address")) {
 				AddressHelper.getSingularAddress(conn, reader);
@@ -212,7 +212,7 @@ public class AddressBook {
 				OccupationHelper.getSingularOccupation(conn, reader);
 			} else if (table.equals("Person")) {
 				PersonHelper.getSingularPerson(conn, reader);
-			} 
+			}
 		} else if (method.equals("Update Singular")) {
 			if (table.equals("Address")) {
 				AddressHelper.updateSingularAddress(conn, reader);
@@ -220,7 +220,7 @@ public class AddressBook {
 				OccupationHelper.updateSingularOccupation(conn, reader);
 			} else if (table.equals("Person")) {
 				PersonHelper.updateSingularPerson(conn, reader);
-			} 
+			}
 		} else if (method.equals("Update Multiple")) {
 			if (table.equals("Address")) {
 				AddressHelper.updateMultipleAddresses(conn, reader);
@@ -228,7 +228,7 @@ public class AddressBook {
 				OccupationHelper.updateMultipleOccupations(conn, reader);
 			} else if (table.equals("Person")) {
 				PersonHelper.updateMultiplePeople(conn, reader);
-			} 
+			}
 		} else if (method.equals("Insert Singular")) {
 			if (table.equals("Address")) {
 				AddressHelper.insertSingularAddress(conn, reader);
@@ -236,7 +236,7 @@ public class AddressBook {
 				OccupationHelper.insertSingularOccupation(conn, reader);
 			} else if (table.equals("Person")) {
 				PersonHelper.insertSingularPerson(conn, reader);
-			} 
+			}
 		} else if (method.equals("Insert Multiple")) {
 			if (table.equals("Address")) {
 				AddressHelper.insertMultipleAddresses(conn, reader);
@@ -244,7 +244,7 @@ public class AddressBook {
 				OccupationHelper.insertMultipleOccuaptions(conn, reader);
 			} else if (table.equals("Person")) {
 				PersonHelper.insertMultiplePeople(conn, reader);
-			} 
+			}
 		} else if (method.equals("Remove Singular")) {
 			if (table.equals("Address")) {
 				AddressHelper.removeSingularAddress(conn, reader);
@@ -252,7 +252,7 @@ public class AddressBook {
 				OccupationHelper.removeSingularOccupation(conn, reader);
 			} else if (table.equals("Person")) {
 				PersonHelper.removeSingularPerson(conn, reader);
-			} 
+			}
 		} else if (method.equals("Remove Multiple")) {
 			if (table.equals("Address")) {
 				AddressHelper.removeMultipleAddresses(conn, reader);
@@ -260,8 +260,8 @@ public class AddressBook {
 				OccupationHelper.removeMultipleOccupations(conn, reader);
 			} else if (table.equals("Person")) {
 				PersonHelper.removeMultiplePeople(conn, reader);
-			} 
-		} 
+			}
+		}
 	}
 
 	/**
@@ -277,7 +277,7 @@ public class AddressBook {
 			System.exit(0);
 		} catch (Exception e) {
 			Helper.log(e, "AddressBook.java", "quit()");
-		} 
+		}
 	}
 
 	/**
@@ -291,6 +291,6 @@ public class AddressBook {
 			System.exit(0);
 		} catch (Exception e) {
 			Helper.log(e, "AddressBook.java", "quit()");
-		} 
+		}
 	}
 }

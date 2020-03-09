@@ -344,7 +344,7 @@ public class ConnectionHelper {
 	 */
 	public static Connection connectionBuilder(List<String> savedConnection) {
 		try {
-			String connection = MessageFormat.format("jdbc:mysql://{0}/{1}?user={2}&password={3}", new Object[] { savedConnection.get(0), savedConnection.get(1), savedConnection.get(2), savedConnection.get(savedConnection.size()-1) });
+			String connection = MessageFormat.format("jdbc:mysql://{0}/{1}?user={2}&password={3}&serverTimezone=UTC", new Object[] { savedConnection.get(0), savedConnection.get(1), savedConnection.get(2), savedConnection.get(savedConnection.size()-1) });
 			return (Connection)DriverManager.getConnection(connection);
 		} catch (Exception e) {
 			Helper.log(e, "ConnectionManager.java", "connectionBuilder()");
