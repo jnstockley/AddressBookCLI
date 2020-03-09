@@ -1,4 +1,4 @@
-package addressBook;
+package com.jackstockley.addressbook;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;

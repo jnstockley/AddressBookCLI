@@ -1,4 +1,4 @@
-package addressBook;
+package com.jackstockley.addressbook;
 
 import java.sql.Connection;
 import java.sql.Date;
