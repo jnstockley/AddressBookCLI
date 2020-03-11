@@ -1,4 +1,4 @@
-# AddressBook
+# AddressBookCLI
 Verison 2.0 has been released!
 
 This is the biggest update since I have release the first address book!
