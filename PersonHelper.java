@@ -1,4 +1,4 @@
-package com.jackstockley.addressbook;
+package com.jackstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.sql.Connection;
@@ -9,10 +9,15 @@ import java.util.List;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import com.jackstockley.addressbook.Address;
+import com.jackstockley.addressbook.Occupation;
+import com.jackstockley.addressbook.Person;
+import com.jackstockley.addressbook.Helper;
+
 /**
  * This part of the program helps connect the user to the MySQL database and the person table by formatting data and allowing user input
  * @author jnstockley
- * @version 2.00
+ * @version 2.1
  *
  */
 
@@ -26,12 +31,18 @@ public class PersonHelper {
 	public static void getAllPeople(Connection conn){
 		try {
 			List<Person> people = Person.getPerson(conn); //Gets a list of all the people in the database
-			for(Person person: people) { //Prints out the list of people to the console!
-				System.out.println(person);
+			if(people!=null) {
+				for(Person person: people) { //Prints out the list of people to the console!
+					System.out.println(person);
+				}
+			}else {
+				System.out.println("Error getting people. Please check the log!");
+				CLIHelper.log("getPeople returned 'null'", "PersonHelper.java", "getAllPeople()");
 			}
+
 		}catch(Exception e) {
 			System.out.println("Error getting all people. Please check the log!");
-			Helper.log(e, "PersonHelper.java", "getAllPeople()");
+			CLIHelper.log(e, "PersonHelper.java", "getAllPeople()");
 		}
 	}
 
@@ -70,9 +81,9 @@ public class PersonHelper {
 			String selectedField = fields.get(Integer.parseInt(reader.readLine())-1); //Gets the string version of the field the user selected
 			System.out.println();
 			if(selectedField.contains("Date")) { //Gets correct formatting if field is date
-				data = Helper.dateFinder(reader);
+				data = CLIHelper.dateFinder(reader);
 			}else if(selectedField.contains("Time")) { //Gets correct formatting if field is time
-				data = Helper.timeFinder(reader);
+				data = CLIHelper.timeFinder(reader);
 			}else {
 				System.out.print("\nPlease enter data for " + Helper.split(selectedField).toLowerCase()+ ": ");
 				data = reader.readLine();
@@ -107,17 +118,17 @@ public class PersonHelper {
 				}
 			}
 			System.out.println();
-			if(people.isEmpty()) { //Checks if the list is empty
-				System.out.println("No matching people in the database!");
-				Helper.log("No matching people in the database!", "PersonHelper.java", "getSimilarPeople()");
-			}else { //Prints out all the people to the console!
+			if(people!=null) { //Checks if the list is empty
 				for(Person person: people) {
 					System.out.println(person);
 				}
+			}else { //Prints out all the people to the console!
+				System.out.println("Error getting similar people. Please check the log!");
+				CLIHelper.log("getPeople returned 'null'", "PersonHelper.java", "getSimilarPeople()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting similar people. Please check the log!");
-			Helper.log(e, "PersonHelper.java", "getSimilarPeople()");
+			CLIHelper.log(e, "PersonHelper.java", "getSimilarPeople()");
 		}
 	}
 
@@ -145,14 +156,19 @@ public class PersonHelper {
 			System.out.println();
 			if(ids.contains(selectedId)) { //Checks if the user entered id is in the list of id's from the database
 				Person person = Person.getPerson(conn, selectedId);
-				System.out.println(person); //Gets the selected person and prints out the person
+				if(person!=null) {
+					System.out.println(person); //Gets the selected person and prints out the person
+				}else {
+					System.out.println("Error person. Please check the log!");
+					CLIHelper.log("getPeople returned 'null'", "PersonHelper.java", "getSingularPerson()");
+				}
 			}else { //Prints out error message telling the user they entered an invalid id
 				System.out.println("The ID the user entered is not valid!");
-				Helper.log("The ID the user entered is not valid!", "PersonHelper.java", "getSingularPerson()");
+				CLIHelper.log("The ID the user entered is not valid!", "PersonHelper.java", "getSingularPerson()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting singular person. Please check the log!");
-			Helper.log(e, "PersonHelper.java", "getSingularPerson()");
+			CLIHelper.log(e, "PersonHelper.java", "getSingularPerson()");
 		}
 	}
 
@@ -210,11 +226,11 @@ public class PersonHelper {
 								addressId = Integer.parseInt(addressTemp);
 							}else {
 								System.out.println("Invalid ID for Address ID!");
-								Helper.log("Invalid ID for Address ID!", "PersonHelper.java", "updateSingularPerson()");
+								CLIHelper.log("Invalid ID for Address ID!", "PersonHelper.java", "updateSingularPerson()");
 							}
 						}else {
 							System.out.println("Invalid response for creating a new address!");
-							Helper.log("Invalid resposne for creating a new address!", "PersonHelper.java", "updateSingularPerson()");
+							CLIHelper.log("Invalid resposne for creating a new address!", "PersonHelper.java", "updateSingularPerson()");
 						}
 					}else if(field.equals("OccupationId")) { //Checks if the field is occupation id and allows user to create a new occupation or use an existing occupation
 						System.out.print("Do you want to create a new occupation for this person (Y/N): ");
@@ -238,11 +254,11 @@ public class PersonHelper {
 								occupationId = Integer.parseInt(occupationTemp);
 							}else {
 								System.out.println("Invalid ID for Occupation!");
-								Helper.log("Invalid ID for Occupation!", "PersonHelper.java", "updateSingularPerson()");
+								CLIHelper.log("Invalid ID for Occupation!", "PersonHelper.java", "updateSingularPerson()");
 							}
 						}else {
 							System.out.println("Invalid repsonse for creating a new occupation!");
-							Helper.log("Invalid response for creating a new occupation", "PersonHelper.java", "updateSingularPerson()");
+							CLIHelper.log("Invalid response for creating a new occupation", "PersonHelper.java", "updateSingularPerson()");
 						}
 					}else if(field.equals("HomePhone") || field.equals("MobilePhone") || field.equals("WorkPhone")) { //Checks if the field is a phone number field
 						System.out.println();
@@ -251,7 +267,7 @@ public class PersonHelper {
 						temp = reader.readLine();
 						if(temp.length()!=10 && !temp.equals("")) { //Checks to make sure phone number is a 10 digit number
 							System.out.println("Phone number not supported!");
-							Helper.log("Phone number not supported", "PersonHelper.java", "updateSingularperson()");
+							CLIHelper.log("Phone number not supported", "PersonHelper.java", "updateSingularperson()");
 						}
 					}else if(field.equals("Height")) { //Checks if the field is equal to height to make sure data is in correct units and formatting
 						System.out.println();
@@ -276,15 +292,21 @@ public class PersonHelper {
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 				System.out.println();
-				System.out.println(Person.updatePerson(conn, id, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId)); //Updates the person and prints out the updated person
+				Person person = Person.updatePerson(conn, id, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId); //Updates the person and prints out the updated person
+				if(person!=null) {
+					System.out.println(person);
+				}else {
+					System.out.println("Error updating person. Please check the log!");
+					CLIHelper.log("updatePerson returned 'null'", "PersonHelper.java", "updateSingularPerson()");
+				}
 			}else {
 				System.out.println("The ID the user entered is not valid!");
-				Helper.log("The ID the user entered in not valid!", "PersonHelper.java", "updateSingularPerson()");
+				CLIHelper.log("The ID the user entered in not valid!", "PersonHelper.java", "updateSingularPerson()");
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error updating person. Please check the log!");
-			Helper.log(e, "PersonHelper.java", "updateSingularPerson()");
+			CLIHelper.log(e, "PersonHelper.java", "updateSingularPerson()");
 		}
 	}
 
@@ -300,10 +322,10 @@ public class PersonHelper {
 			int numPeople = Integer.parseInt(reader.readLine());
 			if(numPeople>maxNumPeople) { // Checks that the number of people the user wants to update is not more then the number of people in the database
 				System.out.println("Can't update " + numPeople + " only " + maxNumPeople + " people are in the database!");
-				Helper.log("Can't update " + numPeople + " only " + maxNumPeople + " people are in the database!", "PersonHelper.java", "updateMultiplePeople()");
+				CLIHelper.log("Can't update " + numPeople + " only " + maxNumPeople + " people are in the database!", "PersonHelper.java", "updateMultiplePeople()");
 			}else if(!(numPeople>=0)) { //Checks that the number of people the user wants to update is greater then 0
 				System.out.println("Can't update " + numPeople + " people!");
-				Helper.log("Can't update " + numPeople + " people!", "PersonHelper.java", "updateMultiplePeople()");
+				CLIHelper.log("Can't update " + numPeople + " people!", "PersonHelper.java", "updateMultiplePeople()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numPeople; i++) { //Loops through updateSingularPerson() for the amount of people the user wants to update!
@@ -315,7 +337,7 @@ public class PersonHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error updating person. Please check the log!");
-			Helper.log(e, "PersonHelper.java", "updateMultiplePeople()");
+			CLIHelper.log(e, "PersonHelper.java", "updateMultiplePeople()");
 		}
 	}
 
@@ -361,11 +383,11 @@ public class PersonHelper {
 							addressId = Integer.parseInt(addressTemp);
 						}else {
 							System.out.println("Invalid ID for Address ID!");
-							Helper.log("Invalid ID for Address ID!", "PersonHelper.java", "insertSingularPerson()");
+							CLIHelper.log("Invalid ID for Address ID!", "PersonHelper.java", "insertSingularPerson()");
 						}
 					}else {
 						System.out.println("Invalid response for creating a new address!");
-						Helper.log("Invalid resposne for creating a new address!", "PersonHelper.java", "insertSingularPerson()");
+						CLIHelper.log("Invalid resposne for creating a new address!", "PersonHelper.java", "insertSingularPerson()");
 					}
 				}else if(field.equals("OccupationId")) { //Checks if the field is occupation id and allows user to create a new occupation or use an existing occupation
 					System.out.print("Do you want to create a new occupation for this person (Y/N): ");
@@ -389,11 +411,11 @@ public class PersonHelper {
 							occupationId = Integer.parseInt(occupationTemp);
 						}else {
 							System.out.println("Invalid ID for Occupation!");
-							Helper.log("Invalid ID for Occupation!", "PersonHelper.java", "insertSingularPerson()");
+							CLIHelper.log("Invalid ID for Occupation!", "PersonHelper.java", "insertSingularPerson()");
 						}
 					}else {
 						System.out.println("Invalid repsonse for creating a new occupation!");
-						Helper.log("Invalid response for creating a new occupation", "PersonHelper.java", "insertSingularPerson()");
+						CLIHelper.log("Invalid response for creating a new occupation", "PersonHelper.java", "insertSingularPerson()");
 					}
 				}else if(field.equals("HomePhone") || field.equals("MobilePhone") || field.equals("WorkPhone")) { //Checks if the field is a phone number field
 					System.out.println();
@@ -402,7 +424,7 @@ public class PersonHelper {
 					temp = reader.readLine();
 					if(temp.length()!=10) { //Checks to make sure the phone number is a 10 digit number
 						System.out.println("Phone number not supported!");
-						Helper.log("Phone number not supported!", "PersonHelper.java", "insertSingularPerson()");
+						CLIHelper.log("Phone number not supported!", "PersonHelper.java", "insertSingularPerson()");
 					}
 				}else if(field.equals("Height")) { //Checks if the field is equal to height to make sure data is in correct units and formatting
 					System.out.println();
@@ -420,16 +442,22 @@ public class PersonHelper {
 				}
 				if(temp.equals("")) { //Makes sure the field isn't empty creating an error when adding new person
 					System.out.println(Helper.split(field) + " can't be empty!");
-					Helper.log(Helper.split(field) + " can't be empty!", "PersonHelper.java", "insertSingularPerson()");
+					CLIHelper.log(Helper.split(field) + " can't be empty!", "PersonHelper.java", "insertSingularPerson()");
 				}else {
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 			}
 			System.out.println();
-			System.out.println(Person.insertPerson(conn, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId)); //Creates the new person and prints out the new person
+			Person person = Person.insertPerson(conn, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId); //Creates the new person and prints out the new person
+			if(person!=null) {
+				System.out.println(person);
+			}else {
+				System.out.println("Error inserting person. Please check the log!");
+				CLIHelper.log("insertPerson returned 'null'", "PersonHelper.java", "insertSIngularPerson()");
+			}
 		}catch(Exception e) {
 			System.out.println("Error creating new person. Please check the log!");
-			Helper.log(e, "PersonHelper.java", "newSingularPerson()");
+			CLIHelper.log(e, "PersonHelper.java", "newSingularPerson()");
 		}
 	}
 
@@ -444,7 +472,7 @@ public class PersonHelper {
 			int numPeople = Integer.parseInt(reader.readLine());
 			if(!(numPeople>=0)) { //Checks that the number of people the user wants to create is greater then 0
 				System.out.println("Can't create " + numPeople + " people!");
-				Helper.log("Can't create " + numPeople + "people!", "PersonHelper.java", "insertMultiplePeople()");
+				CLIHelper.log("Can't create " + numPeople + "people!", "PersonHelper.java", "insertMultiplePeople()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numPeople; i++) { //Loops though insertSingularPerson() for the amount of people the user wants to create
@@ -456,7 +484,7 @@ public class PersonHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error creating new person. Please check the log!");
-			Helper.log(e, "PersonHelper.java", "insertMultiplePeople()");
+			CLIHelper.log(e, "PersonHelper.java", "insertMultiplePeople()");
 		}
 	}
 
@@ -484,15 +512,15 @@ public class PersonHelper {
 					System.out.println();
 				}else {
 					System.out.println("There was an error removing the person with " + selectedId + " from the database!");
-					Helper.log("There was an error removing the person with " + selectedId + " from the database!", "PersonHelper.java", "removeSingularPerson()");
+					CLIHelper.log("There was an error removing the person with " + selectedId + " from the database!", "PersonHelper.java", "removeSingularPerson()");
 				}
 			}else {
 				System.out.println("The ID the user enter was not valid!");
-				Helper.log("The ID the user enter was not valid!", "PersonHelper.java", "removeSingularPerson()");
+				CLIHelper.log("The ID the user enter was not valid!", "PersonHelper.java", "removeSingularPerson()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing person. Please check the log!");
-			Helper.log(e, "PersonHelper.java", "removeSingularPerson()");
+			CLIHelper.log(e, "PersonHelper.java", "removeSingularPerson()");
 		}
 	}
 
@@ -508,10 +536,10 @@ public class PersonHelper {
 			int numPeople = Integer.parseInt(reader.readLine());
 			if(numPeople>maxNumPeople) { //Checks that the number of people the user wants to remove is not more then the number of people in the database
 				System.out.println("Can't remove " + numPeople + " only " + maxNumPeople + " people are in the database!");
-				Helper.log("Can't remove " + numPeople + " only " + maxNumPeople + " people are in the database!", "PersonHelper.java", "removeMultiplePeople()");
+				CLIHelper.log("Can't remove " + numPeople + " only " + maxNumPeople + " people are in the database!", "PersonHelper.java", "removeMultiplePeople()");
 			}else if(!(numPeople>=0)) { //Checks that the number of people the user wants to remove is greater then 0
 				System.out.println("Can't remove "+ numPeople + " people!");
-				Helper.log("Can't remove "+ numPeople + " people!", "PersonHelper.java", "removeMultiplePeople()");
+				CLIHelper.log("Can't remove "+ numPeople + " people!", "PersonHelper.java", "removeMultiplePeople()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numPeople; i++) { //Loops through removeSingularPerson() for the amount of people the user wants to remove
@@ -523,7 +551,7 @@ public class PersonHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing person. Please check the log!");
-			Helper.log(e, "PersonHelper.java", "removeMultiplePeople()");
+			CLIHelper.log(e, "PersonHelper.java", "removeMultiplePeople()");
 		}
 	}
 }

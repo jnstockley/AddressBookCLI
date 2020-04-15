@@ -1,4 +1,4 @@
-package com.jackstockley.addressbook;
+package com.jackstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.sql.Connection;
@@ -9,10 +9,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import com.jackstockley.addressbook.Occupation;
+import com.jackstockley.addressbook.Helper;
+
 /**
  * This part of the program helps connect the user to the MySQL database and occupation table by formatting data and allowing user input
  * @author jnstockley
- * @version 2.00
+ * @version 2.1
  *
  */
 
@@ -26,12 +29,18 @@ public class OccupationHelper {
 	public static void getAllOccupations(Connection conn){
 		try {
 			List<Occupation> occupations = Occupation.getOccupation(conn); //Gets a list of all the occupations in the database
-			for(Occupation occupation: occupations) { //Prints out the list of occupations to the console!
-				System.out.println(occupation);
+			if(occupations!=null) {
+				for(Occupation occupation: occupations) { //Prints out the list of occupations to the console!
+					System.out.println(occupation);
+				}
+			}else {
+				System.out.println("Error getting all occupations. Please check the log!");
+				CLIHelper.log("getOccupation returned 'null'", "OccupationHelper.java", "getAllOccupations()");
 			}
+
 		}catch(Exception e) {
 			System.out.println("Error getting all occupations. Please check the log!");
-			Helper.log(e, "OccupationHelper.java", "getAllOccupations()");
+			CLIHelper.log(e, "OccupationHelper.java", "getAllOccupations()");
 		}
 	}
 
@@ -59,9 +68,9 @@ public class OccupationHelper {
 			String selectedField = fields.get(Integer.parseInt(reader.readLine())-1); //Gets the string version of the field the user selected
 			System.out.println();
 			if(selectedField.equals("Date")) { //Gets correct formatting if field is date
-				data = Helper.dateFinder(reader);
+				data = CLIHelper.dateFinder(reader);
 			}else if(selectedField.equals("Time")) { //Gets correct formatting if field is time
-				data = Helper.timeFinder(reader);
+				data = CLIHelper.timeFinder(reader);
 			}else if(selectedField.equals("MonthlySalary")){ //Ensures user know what formatting is required when entering monthly salary
 				System.out.print("Please enter as an integer without $, comma or cents ex: 4200 is $4,200.00");
 				data = reader.readLine();
@@ -71,17 +80,17 @@ public class OccupationHelper {
 			}
 			System.out.println();
 			List<Occupation> occupations = Occupation.getOccupation(conn, selectedField.toLowerCase(), data);
-			if(occupations.isEmpty()) { //Checks if the list is empty
-				System.out.println("No matching occupations in the database!");
-				Helper.log("No matching occupations in the database!", "OccupationHelper.java", "getSimilarOccupations()");
-			}else { //Prints out all the occupations to the console!
+			if(occupations!=null) { //Checks if the list is empty
 				for(Occupation occupation: occupations) {
 					System.out.println(occupation);
 				}
+			}else { //Prints out all the occupations to the console!
+				System.out.println("Error getting similar occupations. Please check the log!");
+				CLIHelper.log("getOccupation returned 'null'", "OccupationHelper.java", "getSimilarOccupations()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting similar occupation. Please check the log!");
-			Helper.log(e, "OccuaptionHelper.java", "getSimilarOccupations()");
+			CLIHelper.log(e, "OccuaptionHelper.java", "getSimilarOccupations()");
 		}
 	}
 
@@ -109,14 +118,19 @@ public class OccupationHelper {
 			System.out.println();
 			if(ids.contains(selectedId)) { //Checks if the user entered id is in the list of id's from the database
 				Occupation occupation = Occupation.getOccupation(conn, selectedId);
-				System.out.println(occupation); //Gets the selected occupation and prints out the occupation
+				if(occupation!=null) {
+					System.out.println(occupation); //Gets the selected occupation and prints out the occupation
+				}else {
+					System.out.println("Error getting occupation. Please check the log!");
+					CLIHelper.log("getOccupation returned 'null'", "OccupationHelper.java", "getSingularOccupation()");
+				}
 			}else { //Prints out error message telling the user they entered an invalid id
 				System.out.println("The ID the user entered is not valid!");
-				Helper.log("The ID the user entered is not valid!", "OccupationHelper.java", "getSingularOccupation()");
+				CLIHelper.log("The ID the user entered is not valid!", "OccupationHelper.java", "getSingularOccupation()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting singular occupation. Please check the log!");
-			Helper.log(e, "OccupationHelper.java", "getSingularOccupation()");
+			CLIHelper.log(e, "OccupationHelper.java", "getSingularOccupation()");
 		}
 	}
 
@@ -160,14 +174,20 @@ public class OccupationHelper {
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 				System.out.println();
-				System.out.println(Occupation.updateOccupation(conn, id, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4)));
+				Occupation occupation = Occupation.updateOccupation(conn, id, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4));
+				if(occupation!=null) {
+					System.out.println(occupation);
+				}else {
+					System.out.println("Error updating occupation. Please check the log!");
+					CLIHelper.log("updateOccupation returned 'null'", "OccupationHelper.java", "updateSingularOccupation()");
+				}
 			}else {
 				System.out.println("The ID the user entered is not valid!");
-				Helper.log("The ID the user entered in not valid!", "OccupationHelper.java", "updateSingularOccupation()");
+				CLIHelper.log("The ID the user entered in not valid!", "OccupationHelper.java", "updateSingularOccupation()");
 			}
 		}catch (Exception e) {
 			System.out.println("Error updating occupation. Please check the log!");
-			Helper.log(e, "OccupationHelper.java", "updateSingularOccupation()");
+			CLIHelper.log(e, "OccupationHelper.java", "updateSingularOccupation()");
 		}
 	}
 
@@ -183,10 +203,10 @@ public class OccupationHelper {
 			int numOccupations = Integer.parseInt(reader.readLine());
 			if(numOccupations>maxNumOccupations) { // Checks that the number of occupations the user wants to update is not more then the number of occupations in the database
 				System.out.println("Can't update " + numOccupations + " only " + maxNumOccupations + " occupations are in the database!");
-				Helper.log("Can't update " + numOccupations + " only " + maxNumOccupations + " occupations are in the database!", "OccupationHelper.java", "updateMultipleOccupations()");
+				CLIHelper.log("Can't update " + numOccupations + " only " + maxNumOccupations + " occupations are in the database!", "OccupationHelper.java", "updateMultipleOccupations()");
 			}else if(!(numOccupations>=0)) { //Checks that the number of occupations the user wants to update is greater then 0
 				System.out.println("Can't update " + numOccupations + " occupations!");
-				Helper.log("Can't update " + numOccupations + " occupations!", "OccupationHelper.java", "updateMultipleOccupations()");
+				CLIHelper.log("Can't update " + numOccupations + " occupations!", "OccupationHelper.java", "updateMultipleOccupations()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numOccupations; i++) { //Loops through updateSingularOccupation() for the amount of occupations the user wants to update!
@@ -198,7 +218,7 @@ public class OccupationHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error updating occupation. Please check the log!");
-			Helper.log(e, "OccupationHelper.java", "updateMultipleOccupations()");
+			CLIHelper.log(e, "OccupationHelper.java", "updateMultipleOccupations()");
 		}
 	}
 
@@ -230,16 +250,22 @@ public class OccupationHelper {
 				}
 				if(temp.equals("")) { //Makes sure the field isn't empty creating an error when adding new occupation
 					System.out.println(Helper.split(field) + " can't be empty!");
-					Helper.log(Helper.split(field) + " can't be empty!", "OccupationHelper.java", "insertSingularOccupation()");
+					CLIHelper.log(Helper.split(field) + " can't be empty!", "OccupationHelper.java", "insertSingularOccupation()");
 				}else {
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 			}
 			System.out.println();
-			System.out.println(Occupation.insertOccupation(conn, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4)));
+			Occupation occupation = Occupation.insertOccupation(conn, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4));
+			if(occupation!=null) {
+				System.out.println(occupation);
+			}else {
+				System.out.println("Error inserting occupation. Please check the log!");
+				CLIHelper.log("insertOccupation returned 'null'", "OccupationHelper.java", "insertSingaulrOccupation)");
+			}
 		}catch(Exception e) {
 			System.out.println("Error creating new occupation. Please check the log!");
-			Helper.log(e, "OccuaptionHelper.java", "newSingularOccupation()");
+			CLIHelper.log(e, "OccuaptionHelper.java", "newSingularOccupation()");
 		}
 	}
 
@@ -254,7 +280,7 @@ public class OccupationHelper {
 			int numOccupations = Integer.parseInt(reader.readLine());
 			if(!(numOccupations>=0)) { //Checks that the number of occupations the user wants to create is greater then 0
 				System.out.println("Can't create " + numOccupations + " occupations!");
-				Helper.log("Can't create " + numOccupations + "occupations!", "OccupationHelper.java", "insertMultipleOccupations()");
+				CLIHelper.log("Can't create " + numOccupations + "occupations!", "OccupationHelper.java", "insertMultipleOccupations()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numOccupations; i++) { //Loops though insertSingularOccupation() for the amount of occupations the user wants to create
@@ -266,7 +292,7 @@ public class OccupationHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error creating new occupation. Please check the log!");
-			Helper.log(e, "OccupationHelper.java", "insertMultipleOccupations()");
+			CLIHelper.log(e, "OccupationHelper.java", "insertMultipleOccupations()");
 		}
 	}
 
@@ -294,15 +320,15 @@ public class OccupationHelper {
 					System.out.println();
 				}else {
 					System.out.println("There was an error removing the occupation with " + selectedId + " from the database!");
-					Helper.log("There was an error removing the occupation with " + selectedId + " from the database!", "OccupationHelper.java", "removeSingularOccupation()");
+					CLIHelper.log("There was an error removing the occupation with " + selectedId + " from the database!", "OccupationHelper.java", "removeSingularOccupation()");
 				}
 			}else {
 				System.out.println("The ID the user enter was not valid!");
-				Helper.log("The ID the user enter was not valid!", "OccupationHelper.java", "removeSingularOccupation()");
+				CLIHelper.log("The ID the user enter was not valid!", "OccupationHelper.java", "removeSingularOccupation()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing occupation. Please check the log!");
-			Helper.log(e, "OccupationHelper.java", "removeSingularOccupation()");
+			CLIHelper.log(e, "OccupationHelper.java", "removeSingularOccupation()");
 		}
 	}
 
@@ -318,10 +344,10 @@ public class OccupationHelper {
 			int numOccupations = Integer.parseInt(reader.readLine());
 			if(numOccupations>maxNumOccupations) { //Checks that the number of occupations the user wants to remove is not more then the number of occupations in the database
 				System.out.println("Can't remove " + numOccupations + " only " + maxNumOccupations + " occupations are in the database!");
-				Helper.log("Can't remove " + numOccupations + " only " + maxNumOccupations + " occupations are in the database!", "OccupationHelper.java", "removeMultipleOccupations()");
+				CLIHelper.log("Can't remove " + numOccupations + " only " + maxNumOccupations + " occupations are in the database!", "OccupationHelper.java", "removeMultipleOccupations()");
 			}else if(!(numOccupations>=0)) { //Checks that the number of occupations the user wants to remove is greater then 0
 				System.out.println("Can't remove "+ numOccupations + " occupations!");
-				Helper.log("Can't remove "+ numOccupations + " occupations!", "OccupationHelper.java", "removeMultipleOccupations()");
+				CLIHelper.log("Can't remove "+ numOccupations + " occupations!", "OccupationHelper.java", "removeMultipleOccupations()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numOccupations; i++) { //Loops through removeSingularOccupation() for the amount of occupations the user wants to remove
@@ -333,7 +359,7 @@ public class OccupationHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing occupation. Please check the log!");
-			Helper.log(e, "OccupationHelper.java", "removeMultipleOccupation()");
+			CLIHelper.log(e, "OccupationHelper.java", "removeMultipleOccupation()");
 		}
 	}
 }

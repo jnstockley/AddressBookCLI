@@ -1,4 +1,4 @@
-package com.jackstockley.addressbook;
+package com.jackstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.sql.Connection;
@@ -9,10 +9,13 @@ import java.util.List;
 
 import org.apache.commons.lang3.text.WordUtils;
 
+import com.jackstockley.addressbook.Address;
+import com.jackstockley.addressbook.Helper;
+
 /**
  * This part of the program helps connect the user to the MySQL database and address table by formating data and allowing user input
  * @author jnstockley
- * @version 2.00
+ * @version 2.1
  *
  */
 
@@ -26,12 +29,17 @@ public class AddressHelper {
 	public static void getAllAddresses(Connection conn){
 		try {
 			List<Address> addresses = Address.getAddress(conn); //Gets a list of all the address in the database
-			for(Address address: addresses) { //Prints out the list of addresses to the console!
-				System.out.println(address);
+			if(addresses!=null) {
+				for(Address address: addresses) { //Prints out the list of addresses to the console!
+					System.out.println(address);
+				}
+			}else {
+				System.out.println("Error getting all addresses. Please check the log!");
+				CLIHelper.log("getAddress returned 'null'", "AddressHelper.java", "getAllAddresses()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting all address. Please check the log!");
-			Helper.log(e, "AddressHelper.java", "getAllAddresses()");
+			CLIHelper.log(e, "AddressHelper.java", "getAllAddresses()");
 		}
 	}
 
@@ -59,26 +67,26 @@ public class AddressHelper {
 			String selectedField = fields.get(Integer.parseInt(reader.readLine())-1); //Gets the string version of the field the user selected
 			System.out.println();
 			if(selectedField.equals("Date")) { //Gets correct formatting if field is date
-				data = Helper.dateFinder(reader);
+				data = CLIHelper.dateFinder(reader);
 			}else if(selectedField.equals("Time")) { //Gets correct formatting if field is time
-				data = Helper.timeFinder(reader);
+				data = CLIHelper.timeFinder(reader);
 			}else {
 				System.out.print("Please enter data for " + Helper.split(selectedField).toLowerCase()+ ": ");
 				data = reader.readLine();
 			}
 			System.out.println();
 			List<Address> addresses = Address.getAddress(conn, selectedField.toLowerCase(), data);
-			if(addresses.isEmpty()) { //Checks if the list is empty
-				System.out.println("No matching addresses in the database!");
-				Helper.log("No matching addresses in the database!", "AddressHelper.java", "getSimilarAddresses()");
-			}else { //Prints out all the addresses to the console!
+			if(addresses!=null) { //Checks if the list is null
 				for(Address address: addresses) {
 					System.out.println(address);
 				}
+			}else { //Prints out all the addresses to the console!
+				System.out.println("Error getting similar addresses. Please check the log!");
+				CLIHelper.log("getAddress returned 'null'", "AddressHelper.java", "getSimilarAddresses()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting similar addresses. Please check the log!");
-			Helper.log(e, "AddressHelper.java", "getSimilarAddresses()");
+			CLIHelper.log(e, "AddressHelper.java", "getSimilarAddresses()");
 		}
 	}
 
@@ -106,14 +114,19 @@ public class AddressHelper {
 			System.out.println();
 			if(ids.contains(selectedId)) { //Checks if the user entered id is in the list of id's from the database
 				Address address = Address.getAddress(conn, selectedId);
-				System.out.println(address); //Gets the selected address and prints out the address
+				if(address!=null) {
+					System.out.println(address); //Gets the selected address and prints out the address
+				}else {
+					System.out.println("Error getting address. Please check the log!");
+					CLIHelper.log("getAddress returned 'null'", "AddressHelper.java", "getSingularAddresses()");
+				}
 			}else { //Prints out error message telling the user they entered an invalid id
 				System.out.println("The ID the user entered is not valid!");
-				Helper.log("The ID the user entered is not valid!", "AddressHelper.java", "getSingularAddress()");
+				CLIHelper.log("The ID the user entered is not valid!", "AddressHelper.java", "getSingularAddress()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting singular address. Please check the log!");
-			Helper.log(e, "AddressHelper.java", "getSingularAddress()");
+			CLIHelper.log(e, "AddressHelper.java", "getSingularAddress()");
 		}
 	}
 
@@ -151,14 +164,20 @@ public class AddressHelper {
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 				System.out.println();
-				System.out.println(Address.updateAddress(conn, id, Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4)));
+				Address address = Address.updateAddress(conn, id, Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4));
+				if(address!=null) {
+					System.out.println(address);
+				}else {
+					System.out.println("Error updating address. Please check the log!");
+					CLIHelper.log("updateAddress returned 'null'", "AddressHelper.java", "updateSingularAddresses()");
+				}
 			}else {
 				System.out.println("The ID the user entered is not valid!");
-				Helper.log("The ID the user entered in not valid!", "AddressHelper.java", "updateSingularAddress()");
+				CLIHelper.log("The ID the user entered in not valid!", "AddressHelper.java", "updateSingularAddress()");
 			}
 		}catch (Exception e) {
 			System.out.println("Error updating address. Please check the log!");
-			Helper.log(e, "AddressHelper.java", "updateSingularAddress()");
+			CLIHelper.log(e, "AddressHelper.java", "updateSingularAddress()");
 		}
 	}
 
@@ -174,10 +193,10 @@ public class AddressHelper {
 			int numAddresses = Integer.parseInt(reader.readLine());
 			if(numAddresses>maxNumAddresses) { // Checks that the number of addresses the user wants to update is not more then the number of addresses in the database
 				System.out.println("Can't update " + numAddresses + " only " + maxNumAddresses + " addresses are in the database!");
-				Helper.log("Can't update " + numAddresses + " only " + maxNumAddresses + " addresses are in the database!", "AddressHelper.java", "updateMultipleAddresses()");
+				CLIHelper.log("Can't update " + numAddresses + " only " + maxNumAddresses + " addresses are in the database!", "AddressHelper.java", "updateMultipleAddresses()");
 			}else if(!(numAddresses>=0)) { //Checks that the number of addresses the user wants to update is greater then 0
 				System.out.println("Can't update " + numAddresses + " addresses!");
-				Helper.log("Can't update " + numAddresses + " addresses!", "AddressHelper.java", "updateMultipleAddresses()");
+				CLIHelper.log("Can't update " + numAddresses + " addresses!", "AddressHelper.java", "updateMultipleAddresses()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numAddresses; i++) { //Loops through updateSingularAddress() for the amount of addresses the user wants to update!
@@ -189,7 +208,7 @@ public class AddressHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error updating address. Please check the log!");
-			Helper.log(e, "AddressHelper.java", "updateMultipleAddresses()");
+			CLIHelper.log(e, "AddressHelper.java", "updateMultipleAddresses()");
 		}
 	}
 
@@ -215,16 +234,22 @@ public class AddressHelper {
 				temp = reader.readLine();
 				if(temp.equals("")) { //Makes sure the field isn't empty creating an error when adding new address
 					System.out.println(Helper.split(field) + " can't be empty!");
-					Helper.log(Helper.split(field) + " can't be empty!", "AddressHelper.java", "insertSingularAddress()");
+					CLIHelper.log(Helper.split(field) + " can't be empty!", "AddressHelper.java", "insertSingularAddress()");
 				}else {
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 			}
 			System.out.println();
-			System.out.println(Address.insertAddress(conn, Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4)));
+			Address address = Address.insertAddress(conn, Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4));
+			if(address!=null) {
+				System.out.println(address);
+			}else {
+				System.out.println("Error inserting address. Please check the log!");
+				CLIHelper.log("insertAddress returned 'null'", "AddressHelper.java", "insertSingularAddresses()");
+			}
 		}catch(Exception e) {
 			System.out.println("Error creating new address. Please check the log!");
-			Helper.log(e, "AddressHelper.java", "newSingularAddress()");
+			CLIHelper.log(e, "AddressHelper.java", "newSingularAddress()");
 		}
 	}
 
@@ -239,7 +264,7 @@ public class AddressHelper {
 			int numAddresses = Integer.parseInt(reader.readLine());
 			if(!(numAddresses>=0)) { //Checks that the number of addresses the user wants to create is greater then 0
 				System.out.println("Can't create " + numAddresses + " addresses!");
-				Helper.log("Can't create " + numAddresses + "addresses!", "AddressHelper.java", "insertMultipleAddresses()");
+				CLIHelper.log("Can't create " + numAddresses + "addresses!", "AddressHelper.java", "insertMultipleAddresses()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numAddresses; i++) { //Loops though insertSingularAddress() for the amount of addresses the user wants to create
@@ -251,7 +276,7 @@ public class AddressHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error creating new address. Please check the log!");
-			Helper.log(e, "AddressHelper.java", "insertMultipleAddresses()");
+			CLIHelper.log(e, "AddressHelper.java", "insertMultipleAddresses()");
 		}
 	}
 
@@ -279,15 +304,15 @@ public class AddressHelper {
 					System.out.println();
 				}else {
 					System.out.println("There was an error removing the address with " + selectedId + " from the database!");
-					Helper.log("There was an error removing the address with " + selectedId + " from the database!", "AddressHelper.java", "removeSingularAddress()");
+					CLIHelper.log("There was an error removing the address with " + selectedId + " from the database!", "AddressHelper.java", "removeSingularAddress()");
 				}
 			}else {
 				System.out.println("The ID the user enter was not valid!");
-				Helper.log("The ID the user enter was not valid!", "AddressHelper.java", "removeSingularAddress()");
+				CLIHelper.log("The ID the user enter was not valid!", "AddressHelper.java", "removeSingularAddress()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing address. Please check the log!");
-			Helper.log(e, "AddressHelper.java", "removeSingularAddress()");
+			CLIHelper.log(e, "AddressHelper.java", "removeSingularAddress()");
 		}
 	}
 
@@ -303,10 +328,10 @@ public class AddressHelper {
 			int numAddress = Integer.parseInt(reader.readLine());
 			if(numAddress>maxNumAddresses) { //Checks that the number of addresses the user wants to remove is not more then the number of addresses in the database
 				System.out.println("Can't remove " + numAddress + " only " + maxNumAddresses + " addresses are in the database!");
-				Helper.log("Can't remove " + numAddress + " only " + maxNumAddresses + " addresses are in the database!", "AddressHelper.java", "removeMultipleAddresses()");
+				CLIHelper.log("Can't remove " + numAddress + " only " + maxNumAddresses + " addresses are in the database!", "AddressHelper.java", "removeMultipleAddresses()");
 			}else if(!(numAddress>=0)) { //Checks that the number of addresses the user wants to remove is greater then 0
 				System.out.println("Can't remove "+ numAddress + " addresses!");
-				Helper.log("Can't remove "+ numAddress + " addresses!", "AddressHelper.java", "removeMultipleAddresses()");
+				CLIHelper.log("Can't remove "+ numAddress + " addresses!", "AddressHelper.java", "removeMultipleAddresses()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numAddress; i++) { //Loops through removeSingularAddress() for the amount of address the user wants to remove
@@ -318,7 +343,7 @@ public class AddressHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing address. Please check the log!");
-			Helper.log(e, "AddressHelper.java", "removeMultipleAddresses()");
+			CLIHelper.log(e, "AddressHelper.java", "removeMultipleAddresses()");
 		}
 	}
 }

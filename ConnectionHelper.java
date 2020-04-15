@@ -1,4 +1,4 @@
-package com.jackstockley.addressbook;
+package com.jackstockley.addressbookcli;
 
 import java.sql.*;
 import com.opencsv.CSVReader;
@@ -18,6 +18,7 @@ import java.util.Base64;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+import com.jackstockley.addressbook.Helper;
 
 /**
  * This part of the program help with getting and saving connection to a CSV file and also helps with duplicate checking and password salting and hashing
@@ -39,7 +40,7 @@ public class ConnectionHelper {
 			sr.nextBytes(salt);
 			return Base64.getEncoder().encodeToString(salt);
 		} catch (Exception e) {
-			Helper.log(e, "Helper.java", "generateSalt()");
+			CLIHelper.log(e, "Helper.java", "generateSalt()");
 			return null;
 		} 
 	}
@@ -66,7 +67,7 @@ public class ConnectionHelper {
 			} 
 			return passSb.toString();
 		} catch (Exception e) {
-			Helper.log(e, "ConnectionManager.java", "encryptPassword()");
+			CLIHelper.log(e, "ConnectionManager.java", "encryptPassword()");
 			return null;
 		} 
 	}
@@ -177,14 +178,14 @@ public class ConnectionHelper {
 					return connection;
 				}
 				System.out.println("Error the passwords are not the same or the User already exists!");
-				Helper.log("Error the passwords are not the same or the User already exists!", "ConnectionHelper.java", "saveConnection()");
+				CLIHelper.log("Error the passwords are not the same or the User already exists!", "ConnectionHelper.java", "saveConnection()");
 				return null;
 			} 
 			System.out.println("IP/Domain Name is not valid!");
-			Helper.log("IP/Domain Name is not valid!", "ConnectionHelper.java", "saveConnection()");
+			CLIHelper.log("IP/Domain Name is not valid!", "ConnectionHelper.java", "saveConnection()");
 			return null;
 		} catch (Exception e) {
-			Helper.log(e, "ConnectionManager.java", "saveConnection()");
+			CLIHelper.log(e, "ConnectionManager.java", "saveConnection()");
 			return null;
 		} 
 	}
@@ -212,7 +213,7 @@ public class ConnectionHelper {
 			} 
 			return false;
 		} catch (Exception e) {
-			Helper.log(e, "ConnectionManager.java", "duplicateConnection()");
+			CLIHelper.log(e, "ConnectionManager.java", "duplicateConnection()");
 			return false;
 		} 
 	}
@@ -240,7 +241,7 @@ public class ConnectionHelper {
 			} 
 			return connections;
 		} catch (Exception e) {
-			Helper.log(e, "ConnectionManager.java", "getAllConnections()");
+			CLIHelper.log(e, "ConnectionManager.java", "getAllConnections()");
 			return null;
 		} 
 	}
@@ -279,7 +280,7 @@ public class ConnectionHelper {
 			} 
 			return null;
 		} catch (Exception e) {
-			Helper.log(e, "ConnectionManager.java", "retrieveConnection()");
+			CLIHelper.log(e, "ConnectionManager.java", "retrieveConnection()");
 			return null;
 		} 
 	}
@@ -297,7 +298,7 @@ public class ConnectionHelper {
 				return true; 
 			return false;
 		} catch (Exception e) {
-			Helper.log(e, "ConnectionManager.java", "confirmPassword()");
+			CLIHelper.log(e, "ConnectionManager.java", "confirmPassword()");
 			return false;
 		} 
 	}
@@ -333,7 +334,7 @@ public class ConnectionHelper {
 			} 
 			connectionFile.close();
 		} catch (Exception e) {
-			Helper.log(e, "ConnectionManager.java", "removeConnection()");
+			CLIHelper.log(e, "ConnectionManager.java", "removeConnection()");
 		} 
 	}
 
@@ -347,7 +348,7 @@ public class ConnectionHelper {
 			String connection = MessageFormat.format("jdbc:mysql://{0}/{1}?user={2}&password={3}&serverTimezone=UTC", new Object[] { savedConnection.get(0), savedConnection.get(1), savedConnection.get(2), savedConnection.get(savedConnection.size()-1) });
 			return (Connection)DriverManager.getConnection(connection);
 		} catch (Exception e) {
-			Helper.log(e, "ConnectionManager.java", "connectionBuilder()");
+			CLIHelper.log(e, "ConnectionManager.java", "connectionBuilder()");
 			return null;
 		} 
 	}
@@ -390,7 +391,7 @@ public class ConnectionHelper {
 			}
 			return connection;
 		}catch(Exception e) {
-			Helper.log(e, "ConnectionManger.java", "noSaveConnection()");
+			CLIHelper.log(e, "ConnectionManger.java", "noSaveConnection()");
 			return null;
 		}
 	}
