@@ -1,4 +1,12 @@
 # AddressBookCLI
+
+## Adderss BookCLI V2.1
+ This is a minor quality of life update to fix some bugs!
+ Change Log:
+ 1. Imporoved reliablity when performing action on the database
+ 2. Auto check for update
+ - The program will check for updates when launched and notify you if you need to update!
+
 Verison 2.0 has been released!
 
 This is the biggest update since I have release the first address book!
