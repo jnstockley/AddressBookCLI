@@ -6,6 +6,7 @@
  1. Imporoved reliablity when performing action on the database
  2. Auto check for update
  - The program will check for updates when launched and notify you if you need to update!
+ 3. Full Switch to maven progject!
 
 Verison 2.0 has been released!
 
