@@ -1,5 +1,8 @@
 # AddressBookCLI
 
+## Version 2.6
+Version 2.6 has been released! This version includes support for the new backend as well as AES encryption and decryption! Also this is going to be the FINAL planned release for this project! I am going to be focusing my efforts on the REST API over the CLI! I will still post bug fixes as needed but don't plan on any new features!
+
 ## Version 2.5
 As some of you may know I have recently started to split parts of the program apart from eachother. I have recently released the new and improved backend of the program at https://github.com/jnstockley/AddressBook. I am currently startting to rewirte the CLI with the same improvements and also to include the new and improved backend. Stay tuned!
 
