@@ -1,4 +1,4 @@
-package com.jackstockley.addressbookcli;
+package jackstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.sql.Connection;
@@ -7,42 +7,40 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 
-import com.jackstockley.addressbook.Address;
-import com.jackstockley.addressbook.Occupation;
-import com.jackstockley.addressbook.Person;
-import com.jackstockley.addressbook.Helper;
+import jackstockley.addressbook.Person;
 
 /**
  * This part of the program helps connect the user to the MySQL database and the person table by formatting data and allowing user input
  * @author jnstockley
- * @version 2.1
+ * @version 2.6
  *
  */
-
-@SuppressWarnings("deprecation")
 public class PersonHelper {
 
+	private Person personHelper = new Person();
+	private FrontendHelper frontendHelper = new FrontendHelper();
+	
 	/**
 	 * Prints out all the people from the MySQL database to the console!
 	 * @param conn The MySQL connection
 	 */
-	public static void getAllPeople(Connection conn){
+	public void getAllPeople(Connection conn){
 		try {
-			List<Person> people = Person.getPerson(conn); //Gets a list of all the people in the database
+			List<Person> people = personHelper.getAllPeople(conn); //Gets a list of all the people in the database
 			if(people!=null) {
 				for(Person person: people) { //Prints out the list of people to the console!
 					System.out.println(person);
 				}
 			}else {
 				System.out.println("Error getting people. Please check the log!");
-				CLIHelper.log("getPeople returned 'null'", "PersonHelper.java", "getAllPeople()");
+				frontendHelper.log("getPeople returned 'null'", "PersonHelper.java", "getAllPeople()");
 			}
 
 		}catch(Exception e) {
 			System.out.println("Error getting all people. Please check the log!");
-			CLIHelper.log(e, "PersonHelper.java", "getAllPeople()");
+			frontendHelper.log(e, "PersonHelper.java", "getAllPeople()");
 		}
 	}
 
@@ -51,7 +49,7 @@ public class PersonHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void getSimilarPeople(Connection conn, BufferedReader reader){
+	public void getSimilarPeople(Connection conn, BufferedReader reader){
 		try {
 			List<Person> people = new ArrayList<>();
 			List<String> fields = new ArrayList<>();
@@ -72,7 +70,7 @@ public class PersonHelper {
 			}
 			int fieldId = 1;
 			for(String field: fields) { //Prints out all the fields with an id that the user can use to select which field to use
-				System.out.println(fieldId + ": " + Helper.split(field));
+				System.out.println(fieldId + ": " + frontendHelper.split(field));
 				fieldId++;
 			}
 			System.out.println();
@@ -81,41 +79,41 @@ public class PersonHelper {
 			String selectedField = fields.get(Integer.parseInt(reader.readLine())-1); //Gets the string version of the field the user selected
 			System.out.println();
 			if(selectedField.contains("Date")) { //Gets correct formatting if field is date
-				data = CLIHelper.dateFinder(reader);
+				data = frontendHelper.dateFinder(reader);
 			}else if(selectedField.contains("Time")) { //Gets correct formatting if field is time
-				data = CLIHelper.timeFinder(reader);
+				data = frontendHelper.timeFinder(reader);
 			}else {
-				System.out.print("\nPlease enter data for " + Helper.split(selectedField).toLowerCase()+ ": ");
+				System.out.print("\nPlease enter data for " + frontendHelper.split(selectedField).toLowerCase()+ ": ");
 				data = reader.readLine();
 				System.out.println();
 			}
 			if(selectedField.contains("Person")) { //Gets a list of similar people
-				people = Person.getPerson(conn, selectedField.substring(selectedField.indexOf("- ")+2).toLowerCase(), data);
+				people = personHelper.getSimilarPeople(conn, selectedField.substring(selectedField.indexOf("- ")+2).toLowerCase(), data);
 			}else if(selectedField.contains("Address")) { //Gets a list of similar people based on having a similar field from the address table
-				List<Address> addresses = Address.getAddress(conn, selectedField.substring(selectedField.indexOf("- ")+2).toLowerCase(), data);
+				/*List<Address> addresses = Address.getAddress(conn, selectedField.substring(selectedField.indexOf("- ")+2).toLowerCase(), data);
 				List<String> addressIds = new ArrayList<>();
 				for(Address address: addresses) { //Adds all the address id's to a list
 					addressIds.add(Integer.toString(address.getId()));
 				}
 				for(String addressId: addressIds) { //Gets all the people that have matching address id's
 					System.out.println(String.valueOf(addressId));
-					List<Person> temp = Person.getPerson(conn, "addressid", addressId);
+					List<Person> temp = personHelper.getSimilarPeople(conn, "addressid", addressId);
 					for(Person person: temp) { // Adds the people with similar address fields to the people list
 						people.add(person);
 					}
-				}
+				}*/
 			}else if(selectedField.contains("Occupation")) { //Gets a list of similar people based on having a similar field from the occupation table
-				List<Occupation> occupations = Occupation.getOccupation(conn, selectedField.substring(selectedField.indexOf("- ")+2).toLowerCase(), data);
+				/*List<Occupation> occupations = Occupation.getOccupation(conn, selectedField.substring(selectedField.indexOf("- ")+2).toLowerCase(), data);
 				List<String> occupationIds = new ArrayList<>();
 				for(Occupation occupation: occupations) { // Adds all the occupation id's to a list
 					occupationIds.add(Integer.toString(occupation.getId()));
 				}
 				for(String occupationId: occupationIds) { //Gets all the people that have matching occupation id's
-					List<Person> temp = Person.getPerson(conn, "occupationid", occupationId);
+					List<Person> temp = personHelper.getSimilarPeople(conn, "occupationid", occupationId);
 					for(Person person: temp) { //Adds the people with similar occupation fields to the people list
 						people.add(person);
 					}
-				}
+				}*/
 			}
 			System.out.println();
 			if(people!=null) { //Checks if the list is empty
@@ -124,11 +122,11 @@ public class PersonHelper {
 				}
 			}else { //Prints out all the people to the console!
 				System.out.println("Error getting similar people. Please check the log!");
-				CLIHelper.log("getPeople returned 'null'", "PersonHelper.java", "getSimilarPeople()");
+				frontendHelper.log("getPeople returned 'null'", "PersonHelper.java", "getSimilarPeople()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting similar people. Please check the log!");
-			CLIHelper.log(e, "PersonHelper.java", "getSimilarPeople()");
+			frontendHelper.log(e, "PersonHelper.java", "getSimilarPeople()");
 		}
 	}
 
@@ -137,7 +135,7 @@ public class PersonHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void getSingularPerson(Connection conn, BufferedReader reader) {
+	public void getSingularPerson(Connection conn, BufferedReader reader) {
 		try {
 			List<Integer> ids = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement("SELECT id FROM person");
@@ -155,20 +153,20 @@ public class PersonHelper {
 			int selectedId = Integer.parseInt(reader.readLine());
 			System.out.println();
 			if(ids.contains(selectedId)) { //Checks if the user entered id is in the list of id's from the database
-				Person person = Person.getPerson(conn, selectedId);
+				Person person = personHelper.getSingularPerson(conn, selectedId);
 				if(person!=null) {
 					System.out.println(person); //Gets the selected person and prints out the person
 				}else {
 					System.out.println("Error person. Please check the log!");
-					CLIHelper.log("getPeople returned 'null'", "PersonHelper.java", "getSingularPerson()");
+					frontendHelper.log("getPeople returned 'null'", "PersonHelper.java", "getSingularPerson()");
 				}
 			}else { //Prints out error message telling the user they entered an invalid id
 				System.out.println("The ID the user entered is not valid!");
-				CLIHelper.log("The ID the user entered is not valid!", "PersonHelper.java", "getSingularPerson()");
+				frontendHelper.log("The ID the user entered is not valid!", "PersonHelper.java", "getSingularPerson()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting singular person. Please check the log!");
-			CLIHelper.log(e, "PersonHelper.java", "getSingularPerson()");
+			frontendHelper.log(e, "PersonHelper.java", "getSingularPerson()");
 		}
 	}
 
@@ -178,7 +176,7 @@ public class PersonHelper {
 	 * @param conn  The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void updateSingularPerson(Connection conn, BufferedReader reader) {
+	public void updateSingularPerson(Connection conn, BufferedReader reader) {
 		try {
 			List<String> fields = new ArrayList<>();
 			List<String> data = new ArrayList<>();
@@ -208,10 +206,10 @@ public class PersonHelper {
 						System.out.print("Do you want to create a new address for this person (Y/N): ");
 						String newAddress = reader.readLine();
 						if(newAddress.equalsIgnoreCase("y")) { //Allows user to create a new address for selected person and updates id of person with new address
-							AddressHelper.insertSingularAddress(conn, reader);
-							addressId = Helper.mostRecent(conn, "address");
+							//AddressHelper.insertSingularAddress(conn, reader);
+							//addressId = frontendHelper.mostRecent(conn, "address");
 						}else if(newAddress.equalsIgnoreCase("n")) { //Allows user to select an address from the database and sets the id of the person for the selected address
-							List<Address> addresses = Address.getAddress(conn);
+							/*List<Address> addresses = Address.getAddress(conn);
 							List<Integer> addressIds = new ArrayList<>();
 							System.out.println();
 							for(Address address: addresses) { //Prints out all the addresses in the database and adds all the id's to the addressIds list
@@ -226,20 +224,20 @@ public class PersonHelper {
 								addressId = Integer.parseInt(addressTemp);
 							}else {
 								System.out.println("Invalid ID for Address ID!");
-								CLIHelper.log("Invalid ID for Address ID!", "PersonHelper.java", "updateSingularPerson()");
-							}
+								frontendHelper.log("Invalid ID for Address ID!", "PersonHelper.java", "updateSingularPerson()");
+							}*/
 						}else {
 							System.out.println("Invalid response for creating a new address!");
-							CLIHelper.log("Invalid resposne for creating a new address!", "PersonHelper.java", "updateSingularPerson()");
+							frontendHelper.log("Invalid resposne for creating a new address!", "PersonHelper.java", "updateSingularPerson()");
 						}
 					}else if(field.equals("OccupationId")) { //Checks if the field is occupation id and allows user to create a new occupation or use an existing occupation
 						System.out.print("Do you want to create a new occupation for this person (Y/N): ");
 						String newOccupation = reader.readLine();
 						if(newOccupation.equalsIgnoreCase("y")) { //Allows user to create a new occupation for selected person and updates id of person with new occupation
-							OccupationHelper.insertSingularOccupation(conn, reader);
-							occupationId = Helper.mostRecent(conn, "occupation");
+							//OccupationHelper.insertSingularOccupation(conn, reader);
+							//occupationId = Helper.mostRecent(conn, "occupation");
 						}else if(newOccupation.equalsIgnoreCase("n")) { //Allows user to select an occupation from the database and sets the id of person for the selected occupation
-							List<Occupation> occupations = Occupation.getOccupation(conn);
+							/*List<Occupation> occupations = Occupation.getOccupation(conn);
 							List<Integer> occupationIds = new ArrayList<Integer>();
 							System.out.println();
 							for (Occupation occupation : occupations) { //Prints out all the occupation ins the database and adds all the id's to the occupationIds list
@@ -254,20 +252,20 @@ public class PersonHelper {
 								occupationId = Integer.parseInt(occupationTemp);
 							}else {
 								System.out.println("Invalid ID for Occupation!");
-								CLIHelper.log("Invalid ID for Occupation!", "PersonHelper.java", "updateSingularPerson()");
-							}
+								frontendHelper.log("Invalid ID for Occupation!", "PersonHelper.java", "updateSingularPerson()");
+							}*/
 						}else {
 							System.out.println("Invalid repsonse for creating a new occupation!");
-							CLIHelper.log("Invalid response for creating a new occupation", "PersonHelper.java", "updateSingularPerson()");
+							frontendHelper.log("Invalid response for creating a new occupation", "PersonHelper.java", "updateSingularPerson()");
 						}
 					}else if(field.equals("HomePhone") || field.equals("MobilePhone") || field.equals("WorkPhone")) { //Checks if the field is a phone number field
 						System.out.println();
 						System.out.println("Please don't include the country code or dashes! Only 10 digit phone numbers are supported!");
-						System.out.print("Enter new data for " + Helper.split(field).toLowerCase()+": ");
+						System.out.print("Enter new data for " + frontendHelper.split(field).toLowerCase()+": ");
 						temp = reader.readLine();
 						if(temp.length()!=10 && !temp.equals("")) { //Checks to make sure phone number is a 10 digit number
 							System.out.println("Phone number not supported!");
-							CLIHelper.log("Phone number not supported", "PersonHelper.java", "updateSingularperson()");
+							frontendHelper.log("Phone number not supported", "PersonHelper.java", "updateSingularperson()");
 						}
 					}else if(field.equals("Height")) { //Checks if the field is equal to height to make sure data is in correct units and formatting
 						System.out.println();
@@ -286,27 +284,28 @@ public class PersonHelper {
 							temp = "0.0";
 						}
 					}else {
-						System.out.print("Enter new data for " + Helper.split(field).toLowerCase() + ": ");
+						System.out.print("Enter new data for " + frontendHelper.split(field).toLowerCase() + ": ");
 						temp = reader.readLine();
 					}
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 				System.out.println();
-				Person person = Person.updatePerson(conn, id, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId); //Updates the person and prints out the updated person
+				Person updatedPerson = new Person(id, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId);
+				Person person = personHelper.updatePerson(conn, id, updatedPerson); //Updates the person and prints out the updated person
 				if(person!=null) {
 					System.out.println(person);
 				}else {
 					System.out.println("Error updating person. Please check the log!");
-					CLIHelper.log("updatePerson returned 'null'", "PersonHelper.java", "updateSingularPerson()");
+					frontendHelper.log("updatePerson returned 'null'", "PersonHelper.java", "updateSingularPerson()");
 				}
 			}else {
 				System.out.println("The ID the user entered is not valid!");
-				CLIHelper.log("The ID the user entered in not valid!", "PersonHelper.java", "updateSingularPerson()");
+				frontendHelper.log("The ID the user entered in not valid!", "PersonHelper.java", "updateSingularPerson()");
 			}
 		}catch (Exception e) {
 			e.printStackTrace();
 			System.out.println("Error updating person. Please check the log!");
-			CLIHelper.log(e, "PersonHelper.java", "updateSingularPerson()");
+			frontendHelper.log(e, "PersonHelper.java", "updateSingularPerson()");
 		}
 	}
 
@@ -315,17 +314,17 @@ public class PersonHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void updateMultiplePeople(Connection conn, BufferedReader reader) {
+	public void updateMultiplePeople(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumPeople = Person.getPerson(conn).size();
+			int maxNumPeople = personHelper.getAllPeople(conn).size();
 			System.out.print("How many people do you want to update (must be less then " + maxNumPeople + "): ");
 			int numPeople = Integer.parseInt(reader.readLine());
 			if(numPeople>maxNumPeople) { // Checks that the number of people the user wants to update is not more then the number of people in the database
 				System.out.println("Can't update " + numPeople + " only " + maxNumPeople + " people are in the database!");
-				CLIHelper.log("Can't update " + numPeople + " only " + maxNumPeople + " people are in the database!", "PersonHelper.java", "updateMultiplePeople()");
+				frontendHelper.log("Can't update " + numPeople + " only " + maxNumPeople + " people are in the database!", "PersonHelper.java", "updateMultiplePeople()");
 			}else if(!(numPeople>=0)) { //Checks that the number of people the user wants to update is greater then 0
 				System.out.println("Can't update " + numPeople + " people!");
-				CLIHelper.log("Can't update " + numPeople + " people!", "PersonHelper.java", "updateMultiplePeople()");
+				frontendHelper.log("Can't update " + numPeople + " people!", "PersonHelper.java", "updateMultiplePeople()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numPeople; i++) { //Loops through updateSingularPerson() for the amount of people the user wants to update!
@@ -337,7 +336,7 @@ public class PersonHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error updating person. Please check the log!");
-			CLIHelper.log(e, "PersonHelper.java", "updateMultiplePeople()");
+			frontendHelper.log(e, "PersonHelper.java", "updateMultiplePeople()");
 		}
 	}
 
@@ -346,7 +345,7 @@ public class PersonHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void insertSingularPerson(Connection conn, BufferedReader reader) {
+	public void insertSingularPerson(Connection conn, BufferedReader reader) {
 		try {
 			String temp = "";
 			int addressId = 0;
@@ -365,10 +364,10 @@ public class PersonHelper {
 					System.out.print("Do you want to create a new address for this person (Y/N): ");
 					String newAddress = reader.readLine();
 					if(newAddress.equalsIgnoreCase("y")) { //Allows user to create a new address for selected person and updates id of person with new address
-						AddressHelper.insertSingularAddress(conn, reader);
-						addressId = Helper.mostRecent(conn, "address");
+						//AddressHelper.insertSingularAddress(conn, reader);
+						//addressId = Helper.mostRecent(conn, "address");
 					}else if(newAddress.equalsIgnoreCase("n")) { //Allows user to select an address from the database and sets the id of the person for the selected address
-						List<Address> addresses = Address.getAddress(conn);
+						/*List<Address> addresses = Address.getAddress(conn);
 						List<Integer> addressIds = new ArrayList<>();
 						for(Address address: addresses) { //Prints out all the addresses in the database and adds all the id's to the addressIds list
 							System.out.println(address);
@@ -383,20 +382,20 @@ public class PersonHelper {
 							addressId = Integer.parseInt(addressTemp);
 						}else {
 							System.out.println("Invalid ID for Address ID!");
-							CLIHelper.log("Invalid ID for Address ID!", "PersonHelper.java", "insertSingularPerson()");
-						}
+							frontendHelper.log("Invalid ID for Address ID!", "PersonHelper.java", "insertSingularPerson()");
+						}*/
 					}else {
 						System.out.println("Invalid response for creating a new address!");
-						CLIHelper.log("Invalid resposne for creating a new address!", "PersonHelper.java", "insertSingularPerson()");
+						frontendHelper.log("Invalid resposne for creating a new address!", "PersonHelper.java", "insertSingularPerson()");
 					}
 				}else if(field.equals("OccupationId")) { //Checks if the field is occupation id and allows user to create a new occupation or use an existing occupation
 					System.out.print("Do you want to create a new occupation for this person (Y/N): ");
 					String newOccupation = reader.readLine();
 					if(newOccupation.equalsIgnoreCase("y")) { //Allows user to create a new occupation for selected person and updates id of person with new occupation
-						OccupationHelper.insertSingularOccupation(conn, reader);
-						occupationId = Helper.mostRecent(conn, "occupation");
+						//OccupationHelper.insertSingularOccupation(conn, reader);
+						//occupationId = Helper.mostRecent(conn, "occupation");
 					}else if(newOccupation.equalsIgnoreCase("n")) { //Allows user to select an occupation from the database and sets the id of person for the selected occupation
-						List<Occupation> occupations = Occupation.getOccupation(conn);
+						/*List<Occupation> occupations = Occupation.getOccupation(conn);
 						List<Integer> occupationIds = new ArrayList<Integer>();
 						for (Occupation occupation : occupations) { //Prints out all the occupation ins the database and adds all the id's to the occupationIds list
 							System.out.println(occupation);
@@ -411,20 +410,20 @@ public class PersonHelper {
 							occupationId = Integer.parseInt(occupationTemp);
 						}else {
 							System.out.println("Invalid ID for Occupation!");
-							CLIHelper.log("Invalid ID for Occupation!", "PersonHelper.java", "insertSingularPerson()");
-						}
+							frontendHelper.log("Invalid ID for Occupation!", "PersonHelper.java", "insertSingularPerson()");
+						}*/
 					}else {
 						System.out.println("Invalid repsonse for creating a new occupation!");
-						CLIHelper.log("Invalid response for creating a new occupation", "PersonHelper.java", "insertSingularPerson()");
+						frontendHelper.log("Invalid response for creating a new occupation", "PersonHelper.java", "insertSingularPerson()");
 					}
 				}else if(field.equals("HomePhone") || field.equals("MobilePhone") || field.equals("WorkPhone")) { //Checks if the field is a phone number field
 					System.out.println();
 					System.out.println("Please don't include the country code or dashes! Only 10 digit phone numbers are supported!");
-					System.out.print("Enter new data for " + Helper.split(field).toLowerCase() + ": ");
+					System.out.print("Enter new data for " + frontendHelper.split(field).toLowerCase() + ": ");
 					temp = reader.readLine();
 					if(temp.length()!=10) { //Checks to make sure the phone number is a 10 digit number
 						System.out.println("Phone number not supported!");
-						CLIHelper.log("Phone number not supported!", "PersonHelper.java", "insertSingularPerson()");
+						frontendHelper.log("Phone number not supported!", "PersonHelper.java", "insertSingularPerson()");
 					}
 				}else if(field.equals("Height")) { //Checks if the field is equal to height to make sure data is in correct units and formatting
 					System.out.println();
@@ -437,27 +436,28 @@ public class PersonHelper {
 					System.out.print("Enter data for weight: ");
 					temp = reader.readLine();
 				}else {
-					System.out.print("Enter data for " + Helper.split(field).toLowerCase() + ": ");
+					System.out.print("Enter data for " + frontendHelper.split(field).toLowerCase() + ": ");
 					temp = reader.readLine();
 				}
 				if(temp.equals("")) { //Makes sure the field isn't empty creating an error when adding new person
-					System.out.println(Helper.split(field) + " can't be empty!");
-					CLIHelper.log(Helper.split(field) + " can't be empty!", "PersonHelper.java", "insertSingularPerson()");
+					System.out.println(frontendHelper.split(field) + " can't be empty!");
+					frontendHelper.log(frontendHelper.split(field) + " can't be empty!", "PersonHelper.java", "insertSingularPerson()");
 				}else {
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 			}
 			System.out.println();
-			Person person = Person.insertPerson(conn, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId); //Creates the new person and prints out the new person
+			Person newPerson = new Person(data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId);
+			Person person = personHelper.insertPerson(conn, newPerson); //Creates the new person and prints out the new person
 			if(person!=null) {
 				System.out.println(person);
 			}else {
 				System.out.println("Error inserting person. Please check the log!");
-				CLIHelper.log("insertPerson returned 'null'", "PersonHelper.java", "insertSIngularPerson()");
+				frontendHelper.log("insertPerson returned 'null'", "PersonHelper.java", "insertSIngularPerson()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error creating new person. Please check the log!");
-			CLIHelper.log(e, "PersonHelper.java", "newSingularPerson()");
+			frontendHelper.log(e, "PersonHelper.java", "newSingularPerson()");
 		}
 	}
 
@@ -466,13 +466,13 @@ public class PersonHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void insertMultiplePeople(Connection conn, BufferedReader reader) {
+	public void insertMultiplePeople(Connection conn, BufferedReader reader) {
 		try {
 			System.out.print("How many people do you want to create: ");
 			int numPeople = Integer.parseInt(reader.readLine());
 			if(!(numPeople>=0)) { //Checks that the number of people the user wants to create is greater then 0
 				System.out.println("Can't create " + numPeople + " people!");
-				CLIHelper.log("Can't create " + numPeople + "people!", "PersonHelper.java", "insertMultiplePeople()");
+				frontendHelper.log("Can't create " + numPeople + "people!", "PersonHelper.java", "insertMultiplePeople()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numPeople; i++) { //Loops though insertSingularPerson() for the amount of people the user wants to create
@@ -484,7 +484,7 @@ public class PersonHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error creating new person. Please check the log!");
-			CLIHelper.log(e, "PersonHelper.java", "insertMultiplePeople()");
+			frontendHelper.log(e, "PersonHelper.java", "insertMultiplePeople()");
 		}
 	}
 
@@ -493,7 +493,7 @@ public class PersonHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void removeSingularPerson(Connection conn, BufferedReader reader) {
+	public void removeSingularPerson(Connection conn, BufferedReader reader) {
 		try {
 			List<Integer> ids = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement("SELECT id FROM person");
@@ -505,22 +505,22 @@ public class PersonHelper {
 			System.out.print("Please select a person: ");
 			int selectedId = Integer.parseInt(reader.readLine());
 			if(ids.contains(selectedId)) { //Makes sure the selected id is a valid id
-				boolean removed = Person.removePerson(conn, "id", Integer.toString(selectedId));
+				boolean removed = personHelper.removePerson(conn, selectedId);
 				if(removed) { //Makes sure the address was removed from the database
 					System.out.println();
 					System.out.println("Person with the id " + selectedId + " was removed from the database!");
 					System.out.println();
 				}else {
 					System.out.println("There was an error removing the person with " + selectedId + " from the database!");
-					CLIHelper.log("There was an error removing the person with " + selectedId + " from the database!", "PersonHelper.java", "removeSingularPerson()");
+					frontendHelper.log("There was an error removing the person with " + selectedId + " from the database!", "PersonHelper.java", "removeSingularPerson()");
 				}
 			}else {
 				System.out.println("The ID the user enter was not valid!");
-				CLIHelper.log("The ID the user enter was not valid!", "PersonHelper.java", "removeSingularPerson()");
+				frontendHelper.log("The ID the user enter was not valid!", "PersonHelper.java", "removeSingularPerson()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing person. Please check the log!");
-			CLIHelper.log(e, "PersonHelper.java", "removeSingularPerson()");
+			frontendHelper.log(e, "PersonHelper.java", "removeSingularPerson()");
 		}
 	}
 
@@ -529,17 +529,17 @@ public class PersonHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void removeMultiplePeople(Connection conn, BufferedReader reader) {
+	public void removeMultiplePeople(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumPeople = Person.getPerson(conn).size();
+			int maxNumPeople = personHelper.getAllPeople(conn).size();
 			System.out.print("How many people do you want to update (must be less then " + maxNumPeople + "): ");
 			int numPeople = Integer.parseInt(reader.readLine());
 			if(numPeople>maxNumPeople) { //Checks that the number of people the user wants to remove is not more then the number of people in the database
 				System.out.println("Can't remove " + numPeople + " only " + maxNumPeople + " people are in the database!");
-				CLIHelper.log("Can't remove " + numPeople + " only " + maxNumPeople + " people are in the database!", "PersonHelper.java", "removeMultiplePeople()");
+				frontendHelper.log("Can't remove " + numPeople + " only " + maxNumPeople + " people are in the database!", "PersonHelper.java", "removeMultiplePeople()");
 			}else if(!(numPeople>=0)) { //Checks that the number of people the user wants to remove is greater then 0
 				System.out.println("Can't remove "+ numPeople + " people!");
-				CLIHelper.log("Can't remove "+ numPeople + " people!", "PersonHelper.java", "removeMultiplePeople()");
+				frontendHelper.log("Can't remove "+ numPeople + " people!", "PersonHelper.java", "removeMultiplePeople()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numPeople; i++) { //Loops through removeSingularPerson() for the amount of people the user wants to remove
@@ -551,7 +551,7 @@ public class PersonHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing person. Please check the log!");
-			CLIHelper.log(e, "PersonHelper.java", "removeMultiplePeople()");
+			frontendHelper.log(e, "PersonHelper.java", "removeMultiplePeople()");
 		}
 	}
 }

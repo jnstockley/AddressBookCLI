@@ -1,4 +1,4 @@
-package com.jackstockley.addressbookcli;
+package jackstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.io.Console;
@@ -15,13 +15,18 @@ import org.apache.commons.lang3.text.WordUtils;
 /**
  * This program allows a user to interact with an address book that is saved on a MySQL database over the Internet!
  * @author jnstockley
- * @version 2.1
+ * @version 2.6
  * 
  */
 
 @SuppressWarnings("deprecation")
 public class AddressBook {
 
+	private static Updater updater = new Updater();
+	private static ConnectionHelper connectionHelper = new ConnectionHelper();
+	private static FrontendHelper frontendHelper = new FrontendHelper();
+	private static AddressBook addressBook = new AddressBook();
+	
 	/**
 	 * The main function of the program
 	 * Allows the user to connect to the server, check for updates, and keeps running until the user wants to quit
@@ -29,10 +34,10 @@ public class AddressBook {
 	 */
 	public static void main(String[] args) {
 		try {
-			double appVersion = 2.1;
+			double appVersion = 2.6;
 			Connection conn = null;
 			boolean running = true;
-			if(Updater.upToDate(appVersion)) { //Makes sure the program is on the latest version!
+			if(updater.upToDate(appVersion)) { //Makes sure the program is on the latest version!
 				while (running) {
 					boolean testingMode = false;
 					String fileName = "SavedConnections.csv";
@@ -40,45 +45,45 @@ public class AddressBook {
 					Console passwordReader = System.console();
 					List<String> connection = null;
 					System.out.println("Welcome to Address Book V" + appVersion + "!");
-					int connectionType = connectionHandler(reader);
+					int connectionType = addressBook.connectionHandler(reader);
 					if (connectionType == 1) { //Save new connection without connecting
-						connection = ConnectionHelper.saveConnection(reader, passwordReader, fileName);
+						connection = connectionHelper.saveConnection(reader, passwordReader, fileName);
 						System.out.println("Connection saved!");
-						quit();
+						addressBook.quit();
 					}else if(connectionType == 2) { //Save a new connection and connect to server
-						connection = ConnectionHelper.saveConnection(reader, passwordReader, fileName);
+						connection = connectionHelper.saveConnection(reader, passwordReader, fileName);
 					}else if(connectionType == 3) { //Connect to server using a saved connection
-						connection = ConnectionHelper.retrieveConnection(reader, passwordReader, fileName, testingMode);
+						connection = connectionHelper.retrieveConnection(reader, passwordReader, fileName, testingMode);
 					}else if(connectionType == 4) { //Connect to the server without saving a connection to the save connection file
-						connection = ConnectionHelper.noSaveConnection(reader, passwordReader);
+						connection = connectionHelper.noSaveConnection(reader, passwordReader);
 					}else if(connectionType == 5) { //Removes a connection from the save connection file
-						ConnectionHelper.removeConnection(reader, passwordReader, fileName);
-						quit();
+						connectionHelper.removeConnection(reader, passwordReader, fileName);
+						addressBook.quit();
 					}else {
 						System.out.println("The connection type you entered in invalid!");
-						CLIHelper.log("Invalid Connection type selected", "AddressBook.java", "main()");
+						frontendHelper.log("Invalid Connection type selected", "AddressBook.java", "main()");
 					}
 					if (testingMode) {
-						conn = (Connection)DriverManager.getConnection("jdbc:mysql://jackstockleyiowa.ddns.net/addressBook?user=Jack&password=Dr1v3r0o&serverTimezone=UTC");
+						conn = (Connection)DriverManager.getConnection("jdbc:mysql://10.0.0.191/addressBook?user=********&password=********&serverTimezone=UTC");
 					} else {
-						conn = ConnectionHelper.connectionBuilder(connection);
+						conn = connectionHelper.connectionBuilder(connection);
 					} 
 					while (running) { //Allows the user to select a table and method to interact with the database keeps running until the user quits by entering 0
-						List<String> selection = selector(reader, conn);
-						printTable(conn, selection.get(0), selection.get(1), reader);
+						List<String> selection = addressBook.selector(reader, conn);
+						addressBook.printTable(conn, selection.get(0), selection.get(1), reader);
 						System.out.print("Do you want to quit the program? (Y/N): ");
 						String quit = reader.readLine();
 						if (quit.equalsIgnoreCase("y"))
 							running = false; 
 					} 
 				}
-				quit(conn);
+				addressBook.quit(conn);
 			}else {
-				quit();
+				addressBook.quit();
 			}
 		} catch (Exception e) {
 			System.out.println("Error in main function! Please check the log!");
-			CLIHelper.log(e, "AddressBook.java", "main()");
+			frontendHelper.log(e, "AddressBook.java", "main()");
 		}
 	}
 
@@ -87,7 +92,7 @@ public class AddressBook {
 	 * @param reader How I am reading data from the console
 	 * @return An integer corresponding to which action the user wants to make
 	 */
-	public static int connectionHandler(BufferedReader reader) {
+	public int connectionHandler(BufferedReader reader) {
 		try {
 			System.out.println("Please select an option below!");
 			System.out.println("1. Save a new conenction without connecting to server");
@@ -97,7 +102,7 @@ public class AddressBook {
 			System.out.println("5. Remove a saved connection from local machine");
 			return Integer.parseInt(reader.readLine());
 		} catch (Exception e) {
-			CLIHelper.log(e, "AddressBook.java", "connectionHandler()");
+			frontendHelper.log(e, "AddressBook.java", "connectionHandler()");
 			return 0;
 		} 
 	}
@@ -108,7 +113,7 @@ public class AddressBook {
 	 * @param conn The MySQL connection
 	 * @return A list of strings with the table and method to perform
 	 */
-	public static List<String> selector(BufferedReader reader, Connection conn) {
+	public List<String> selector(BufferedReader reader, Connection conn) {
 		String table = getTable(reader, conn);
 		String method = getMethod(reader, table, conn);
 		List<String> selection = new ArrayList<>();
@@ -123,7 +128,7 @@ public class AddressBook {
 	 * @param conn The MySQL connection
 	 * @return A string corresponding to which table the user wants to interact with
 	 */
-	public static String getTable(BufferedReader reader, Connection conn) {
+	public String getTable(BufferedReader reader, Connection conn) {
 		try {
 			List<String> tables = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement("SHOW TABLES");
@@ -142,7 +147,7 @@ public class AddressBook {
 			return tables.get(selectedTable - 1);
 		} catch (Exception e) {
 			System.out.println("Error in selecting table. Please check the log!");
-			CLIHelper.log(e, "AddressBook.java", "getTable(");
+			frontendHelper.log(e, "AddressBook.java", "getTable(");
 			return null;
 		} 
 	}
@@ -154,7 +159,7 @@ public class AddressBook {
 	 * @param conn THe MySQL connection
 	 * @return A string corresponding to which method the user wants to interact with on the selected table
 	 */
-	public static String getMethod(BufferedReader reader, String table, Connection conn) {
+	public String getMethod(BufferedReader reader, String table, Connection conn) {
 		try {
 			List<String> methods = new ArrayList<>(Arrays.asList(new String[] { "Get All", "Get By Field", "Get Singular", "Update Singular", "Update Multiple", "Insert Singular", "Insert Multiple", "Remove Singular", "Remove Multiple" }));
 			System.out.println("Please select method for the " + table + " table (Enter 0 to change table): ");
@@ -176,7 +181,7 @@ public class AddressBook {
 			return methods.get(method-1);
 		} catch (Exception e) {
 			System.out.println("Error in selecting method. Please check the log!");
-			CLIHelper.log(e, "AddressBook.java", "getMethod()");
+			frontendHelper.log(e, "AddressBook.java", "getMethod()");
 			return null;
 		} 
 	}
@@ -188,78 +193,81 @@ public class AddressBook {
 	 * @param method The user selected method
 	 * @param reader How I am reading data from the console
 	 */
-	public static void printTable(Connection conn, String table, String method, BufferedReader reader) {
+	public void printTable(Connection conn, String table, String method, BufferedReader reader) {
+		AddressHelper addressHelper = new AddressHelper();
+		OccupationHelper occupationHelper = new OccupationHelper();
+		PersonHelper personHelper = new PersonHelper();
 		if (method.equals("Get All")) {
 			if (table.equals("Address")) {
-				AddressHelper.getAllAddresses(conn);
+				addressHelper.getAllAddresses(conn);
 			} else if (table.equals("Occupation")) {
-				OccupationHelper.getAllOccupations(conn);
+				occupationHelper.getAllOccupations(conn);
 			} else if (table.equals("Person")) {
-				PersonHelper.getAllPeople(conn);
+				personHelper.getAllPeople(conn);
 			} 
 		} else if (method.equals("Get By Field")) {
 			if (table.equals("Address")) {
-				AddressHelper.getSimilarAddresses(conn, reader);
+				addressHelper.getSimilarAddresses(conn, reader);
 			} else if (table.equals("Occupation")) {
-				OccupationHelper.getSimilarOccupations(conn, reader);
+				occupationHelper.getSimilarOccupations(conn, reader);
 			} else if (table.equals("Person")) {
-				PersonHelper.getSimilarPeople(conn, reader);
+				personHelper.getSimilarPeople(conn, reader);
 			} 
 		} else if (method.equals("Get Singular")) {
 			if (table.equals("Address")) {
-				AddressHelper.getSingularAddress(conn, reader);
+				addressHelper.getSingularAddress(conn, reader);
 			} else if (table.equals("Occupation")) {
-				OccupationHelper.getSingularOccupation(conn, reader);
+				occupationHelper.getSingularOccupation(conn, reader);
 			} else if (table.equals("Person")) {
-				PersonHelper.getSingularPerson(conn, reader);
+				personHelper.getSingularPerson(conn, reader);
 			} 
 		} else if (method.equals("Update Singular")) {
 			if (table.equals("Address")) {
-				AddressHelper.updateSingularAddress(conn, reader);
+				addressHelper.updateSingularAddress(conn, reader);
 			} else if (table.equals("Occupation")) {
-				OccupationHelper.updateSingularOccupation(conn, reader);
+				occupationHelper.updateSingularOccupation(conn, reader);
 			} else if (table.equals("Person")) {
-				PersonHelper.updateSingularPerson(conn, reader);
+				personHelper.updateSingularPerson(conn, reader);
 			} 
 		} else if (method.equals("Update Multiple")) {
 			if (table.equals("Address")) {
-				AddressHelper.updateMultipleAddresses(conn, reader);
+				addressHelper.updateMultipleAddresses(conn, reader);
 			} else if (table.equals("Occupation")) {
-				OccupationHelper.updateMultipleOccupations(conn, reader);
+				occupationHelper.updateMultipleOccupations(conn, reader);
 			} else if (table.equals("Person")) {
-				PersonHelper.updateMultiplePeople(conn, reader);
+				personHelper.updateMultiplePeople(conn, reader);
 			} 
 		} else if (method.equals("Insert Singular")) {
 			if (table.equals("Address")) {
-				AddressHelper.insertSingularAddress(conn, reader);
+				addressHelper.insertSingularAddress(conn, reader);
 			} else if (table.equals("Occupation")) {
-				OccupationHelper.insertSingularOccupation(conn, reader);
+				occupationHelper.insertSingularOccupation(conn, reader);
 			} else if (table.equals("Person")) {
-				PersonHelper.insertSingularPerson(conn, reader);
+				personHelper.insertSingularPerson(conn, reader);
 			} 
 		} else if (method.equals("Insert Multiple")) {
 			if (table.equals("Address")) {
-				AddressHelper.insertMultipleAddresses(conn, reader);
+				addressHelper.insertMultipleAddresses(conn, reader);
 			} else if (table.equals("Occupation")) {
-				OccupationHelper.insertMultipleOccuaptions(conn, reader);
+				occupationHelper.insertMultipleOccuaptions(conn, reader);
 			} else if (table.equals("Person")) {
-				PersonHelper.insertMultiplePeople(conn, reader);
+				personHelper.insertMultiplePeople(conn, reader);
 			} 
 		} else if (method.equals("Remove Singular")) {
 			if (table.equals("Address")) {
-				AddressHelper.removeSingularAddress(conn, reader);
+				addressHelper.removeSingularAddress(conn, reader);
 			} else if (table.equals("Occupation")) {
-				OccupationHelper.removeSingularOccupation(conn, reader);
+				occupationHelper.removeSingularOccupation(conn, reader);
 			} else if (table.equals("Person")) {
-				PersonHelper.removeSingularPerson(conn, reader);
+				personHelper.removeSingularPerson(conn, reader);
 			} 
 		} else if (method.equals("Remove Multiple")) {
 			if (table.equals("Address")) {
-				AddressHelper.removeMultipleAddresses(conn, reader);
+				addressHelper.removeMultipleAddresses(conn, reader);
 			} else if (table.equals("Occupation")) {
-				OccupationHelper.removeMultipleOccupations(conn, reader);
+				occupationHelper.removeMultipleOccupations(conn, reader);
 			} else if (table.equals("Person")) {
-				PersonHelper.removeMultiplePeople(conn, reader);
+				personHelper.removeMultiplePeople(conn, reader);
 			} 
 		} 
 	}
@@ -268,7 +276,7 @@ public class AddressBook {
 	 * Quits the program and closes the SQL connection
 	 * @param conn The MySQL connection
 	 */
-	public static void quit(Connection conn) {
+	public void quit(Connection conn) {
 		try {
 			conn.close();
 			System.out.println();
@@ -276,21 +284,21 @@ public class AddressBook {
 			System.out.println("Find this project on github at: http://bit.ly/AddressBookJava");
 			System.exit(0);
 		} catch (Exception e) {
-			CLIHelper.log(e, "AddressBook.java", "quit()");
+			frontendHelper.log(e, "AddressBook.java", "quit()");
 		} 
 	}
 
 	/**
 	 * Quits the program
 	 */
-	public static void quit() {
+	public void quit() {
 		try {
 			System.out.println();
 			System.out.println("Thank you for using the Address Book application created by Jack Stockley");
 			System.out.println("Find this project on github at: http://bit.ly/AddressBookJava");
 			System.exit(0);
 		} catch (Exception e) {
-			CLIHelper.log(e, "AddressBook.java", "quit()");
+			frontendHelper.log(e, "AddressBook.java", "quit()");
 		} 
 	}
 }

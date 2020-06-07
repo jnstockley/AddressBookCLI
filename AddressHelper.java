@@ -1,4 +1,4 @@
-package com.jackstockley.addressbookcli;
+package jackstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.sql.Connection;
@@ -6,40 +6,40 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
+import org.apache.commons.text.WordUtils;
 
-import org.apache.commons.lang3.text.WordUtils;
 
-import com.jackstockley.addressbook.Address;
-import com.jackstockley.addressbook.Helper;
+import jackstockley.addressbook.*;
 
 /**
  * This part of the program helps connect the user to the MySQL database and address table by formating data and allowing user input
  * @author jnstockley
- * @version 2.1
+ * @version 2.6
  *
  */
 
-@SuppressWarnings("deprecation")
 public class AddressHelper {
 
+	private Address addressHelper = new Address();
+	private FrontendHelper frontendHelper = new FrontendHelper();
 	/**
 	 * Prints out all the addresses from the MySQL database to the console!
 	 * @param conn The MySQL connection
 	 */
-	public static void getAllAddresses(Connection conn){
+	public void getAllAddresses(Connection conn){
 		try {
-			List<Address> addresses = Address.getAddress(conn); //Gets a list of all the address in the database
+			List<Address> addresses = addressHelper.getAllAddresses(conn); //Gets a list of all the address in the database
 			if(addresses!=null) {
 				for(Address address: addresses) { //Prints out the list of addresses to the console!
 					System.out.println(address);
 				}
 			}else {
 				System.out.println("Error getting all addresses. Please check the log!");
-				CLIHelper.log("getAddress returned 'null'", "AddressHelper.java", "getAllAddresses()");
+				frontendHelper.log("getAddress returned 'null'", "AddressHelper.java", "getAllAddresses()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting all address. Please check the log!");
-			CLIHelper.log(e, "AddressHelper.java", "getAllAddresses()");
+			frontendHelper.log(e, "AddressHelper.java", "getAllAddresses()");
 		}
 	}
 
@@ -48,7 +48,7 @@ public class AddressHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void getSimilarAddresses(Connection conn, BufferedReader reader){
+	public void getSimilarAddresses(Connection conn, BufferedReader reader){
 		try {
 			List<String> fields = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement("DESCRIBE address"); 
@@ -58,7 +58,7 @@ public class AddressHelper {
 			}
 			int fieldId = 1;
 			for(String field: fields) { //Prints out all the fields with an id that the user can use to select which field to use
-				System.out.println(fieldId + ": " + Helper.split(field));
+				System.out.println(fieldId + ": " + frontendHelper.split(field));
 				fieldId++;
 			}
 			System.out.println();
@@ -67,26 +67,26 @@ public class AddressHelper {
 			String selectedField = fields.get(Integer.parseInt(reader.readLine())-1); //Gets the string version of the field the user selected
 			System.out.println();
 			if(selectedField.equals("Date")) { //Gets correct formatting if field is date
-				data = CLIHelper.dateFinder(reader);
+				data = frontendHelper.dateFinder(reader);
 			}else if(selectedField.equals("Time")) { //Gets correct formatting if field is time
-				data = CLIHelper.timeFinder(reader);
+				data = frontendHelper.timeFinder(reader);
 			}else {
-				System.out.print("Please enter data for " + Helper.split(selectedField).toLowerCase()+ ": ");
+				System.out.print("Please enter data for " + frontendHelper.split(selectedField).toLowerCase()+ ": ");
 				data = reader.readLine();
 			}
 			System.out.println();
-			List<Address> addresses = Address.getAddress(conn, selectedField.toLowerCase(), data);
+			List<Address> addresses = addressHelper.getSimilarAddress(conn, selectedField.toLowerCase(), data);
 			if(addresses!=null) { //Checks if the list is null
 				for(Address address: addresses) {
 					System.out.println(address);
 				}
 			}else { //Prints out all the addresses to the console!
 				System.out.println("Error getting similar addresses. Please check the log!");
-				CLIHelper.log("getAddress returned 'null'", "AddressHelper.java", "getSimilarAddresses()");
+				frontendHelper.log("getAddress returned 'null'", "AddressHelper.java", "getSimilarAddresses()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting similar addresses. Please check the log!");
-			CLIHelper.log(e, "AddressHelper.java", "getSimilarAddresses()");
+			frontendHelper.log(e, "AddressHelper.java", "getSimilarAddresses()");
 		}
 	}
 
@@ -95,7 +95,7 @@ public class AddressHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void getSingularAddress(Connection conn, BufferedReader reader) {
+	public void getSingularAddress(Connection conn, BufferedReader reader) {
 		try {
 			List<Integer> ids = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement("SELECT id FROM address");
@@ -113,20 +113,20 @@ public class AddressHelper {
 			int selectedId = Integer.parseInt(reader.readLine());
 			System.out.println();
 			if(ids.contains(selectedId)) { //Checks if the user entered id is in the list of id's from the database
-				Address address = Address.getAddress(conn, selectedId);
+				Address address = addressHelper.getSingularAddress(conn, selectedId);
 				if(address!=null) {
 					System.out.println(address); //Gets the selected address and prints out the address
 				}else {
 					System.out.println("Error getting address. Please check the log!");
-					CLIHelper.log("getAddress returned 'null'", "AddressHelper.java", "getSingularAddresses()");
+					frontendHelper.log("getAddress returned 'null'", "AddressHelper.java", "getSingularAddresses()");
 				}
 			}else { //Prints out error message telling the user they entered an invalid id
 				System.out.println("The ID the user entered is not valid!");
-				CLIHelper.log("The ID the user entered is not valid!", "AddressHelper.java", "getSingularAddress()");
+				frontendHelper.log("The ID the user entered is not valid!", "AddressHelper.java", "getSingularAddress()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error getting singular address. Please check the log!");
-			CLIHelper.log(e, "AddressHelper.java", "getSingularAddress()");
+			frontendHelper.log(e, "AddressHelper.java", "getSingularAddress()");
 		}
 	}
 
@@ -135,7 +135,7 @@ public class AddressHelper {
 	 * @param conn  The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void updateSingularAddress(Connection conn, BufferedReader reader) {
+	public void updateSingularAddress(Connection conn, BufferedReader reader) {
 		try {
 			List<String> fields = new ArrayList<>();
 			List<String> data = new ArrayList<>();
@@ -159,25 +159,26 @@ public class AddressHelper {
 				System.out.println("To keep exisiting data leave the field blank!");
 				for(String field: fields) { //Loops through the fields and allows the user to update the data in a given field or leave the data the same
 					String temp = "";
-					System.out.print("Enter new data for " + Helper.split(field).toLowerCase() + ": ");
+					System.out.print("Enter new data for " + frontendHelper.split(field).toLowerCase() + ": ");
 					temp = reader.readLine();
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 				System.out.println();
-				Address address = Address.updateAddress(conn, id, Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4));
+				Address updatedAddress = new Address(id, Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4));
+				Address address = addressHelper.updateAddress(conn, id, updatedAddress);
 				if(address!=null) {
 					System.out.println(address);
 				}else {
 					System.out.println("Error updating address. Please check the log!");
-					CLIHelper.log("updateAddress returned 'null'", "AddressHelper.java", "updateSingularAddresses()");
+					frontendHelper.log("updateAddress returned 'null'", "AddressHelper.java", "updateSingularAddresses()");
 				}
 			}else {
 				System.out.println("The ID the user entered is not valid!");
-				CLIHelper.log("The ID the user entered in not valid!", "AddressHelper.java", "updateSingularAddress()");
+				frontendHelper.log("The ID the user entered in not valid!", "AddressHelper.java", "updateSingularAddress()");
 			}
 		}catch (Exception e) {
 			System.out.println("Error updating address. Please check the log!");
-			CLIHelper.log(e, "AddressHelper.java", "updateSingularAddress()");
+			frontendHelper.log(e, "AddressHelper.java", "updateSingularAddress()");
 		}
 	}
 
@@ -186,17 +187,17 @@ public class AddressHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void updateMultipleAddresses(Connection conn, BufferedReader reader) {
+	public void updateMultipleAddresses(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumAddresses = Address.getAddress(conn).size();
+			int maxNumAddresses = addressHelper.getAllAddresses(conn).size();
 			System.out.print("How many addresses do you want to update (must be less then " + maxNumAddresses + "): ");
 			int numAddresses = Integer.parseInt(reader.readLine());
 			if(numAddresses>maxNumAddresses) { // Checks that the number of addresses the user wants to update is not more then the number of addresses in the database
 				System.out.println("Can't update " + numAddresses + " only " + maxNumAddresses + " addresses are in the database!");
-				CLIHelper.log("Can't update " + numAddresses + " only " + maxNumAddresses + " addresses are in the database!", "AddressHelper.java", "updateMultipleAddresses()");
+				frontendHelper.log("Can't update " + numAddresses + " only " + maxNumAddresses + " addresses are in the database!", "AddressHelper.java", "updateMultipleAddresses()");
 			}else if(!(numAddresses>=0)) { //Checks that the number of addresses the user wants to update is greater then 0
 				System.out.println("Can't update " + numAddresses + " addresses!");
-				CLIHelper.log("Can't update " + numAddresses + " addresses!", "AddressHelper.java", "updateMultipleAddresses()");
+				frontendHelper.log("Can't update " + numAddresses + " addresses!", "AddressHelper.java", "updateMultipleAddresses()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numAddresses; i++) { //Loops through updateSingularAddress() for the amount of addresses the user wants to update!
@@ -208,7 +209,7 @@ public class AddressHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error updating address. Please check the log!");
-			CLIHelper.log(e, "AddressHelper.java", "updateMultipleAddresses()");
+			frontendHelper.log(e, "AddressHelper.java", "updateMultipleAddresses()");
 		}
 	}
 
@@ -217,7 +218,7 @@ public class AddressHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void insertSingularAddress(Connection conn, BufferedReader reader) {
+	public void insertSingularAddress(Connection conn, BufferedReader reader) {
 		try {
 			String temp = "";
 			List<String> fields = new ArrayList<>();
@@ -230,26 +231,27 @@ public class AddressHelper {
 				}
 			}
 			for(String field: fields) {
-				System.out.print("Enter data for " + Helper.split(field).toLowerCase() + ": ");
+				System.out.print("Enter data for " + frontendHelper.split(field).toLowerCase() + ": ");
 				temp = reader.readLine();
 				if(temp.equals("")) { //Makes sure the field isn't empty creating an error when adding new address
-					System.out.println(Helper.split(field) + " can't be empty!");
-					CLIHelper.log(Helper.split(field) + " can't be empty!", "AddressHelper.java", "insertSingularAddress()");
+					System.out.println(frontendHelper.split(field) + " can't be empty!");
+					frontendHelper.log(frontendHelper.split(field) + " can't be empty!", "AddressHelper.java", "insertSingularAddress()");
 				}else {
 					data.add(WordUtils.capitalize(temp)); //Uses WordUtils to make the word capitalized every new word and adds the word to the list
 				}
 			}
 			System.out.println();
-			Address address = Address.insertAddress(conn, Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4));
+			Address newAddress = new Address(Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4));
+			Address address = addressHelper.insertAddress(conn, newAddress);
 			if(address!=null) {
 				System.out.println(address);
 			}else {
 				System.out.println("Error inserting address. Please check the log!");
-				CLIHelper.log("insertAddress returned 'null'", "AddressHelper.java", "insertSingularAddresses()");
+				frontendHelper.log("insertAddress returned 'null'", "AddressHelper.java", "insertSingularAddresses()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error creating new address. Please check the log!");
-			CLIHelper.log(e, "AddressHelper.java", "newSingularAddress()");
+			frontendHelper.log(e, "AddressHelper.java", "newSingularAddress()");
 		}
 	}
 
@@ -258,13 +260,13 @@ public class AddressHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void insertMultipleAddresses(Connection conn, BufferedReader reader) {
+	public void insertMultipleAddresses(Connection conn, BufferedReader reader) {
 		try {
 			System.out.print("How many addresses do you want to create: ");
 			int numAddresses = Integer.parseInt(reader.readLine());
 			if(!(numAddresses>=0)) { //Checks that the number of addresses the user wants to create is greater then 0
 				System.out.println("Can't create " + numAddresses + " addresses!");
-				CLIHelper.log("Can't create " + numAddresses + "addresses!", "AddressHelper.java", "insertMultipleAddresses()");
+				frontendHelper.log("Can't create " + numAddresses + "addresses!", "AddressHelper.java", "insertMultipleAddresses()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numAddresses; i++) { //Loops though insertSingularAddress() for the amount of addresses the user wants to create
@@ -276,7 +278,7 @@ public class AddressHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error creating new address. Please check the log!");
-			CLIHelper.log(e, "AddressHelper.java", "insertMultipleAddresses()");
+			frontendHelper.log(e, "AddressHelper.java", "insertMultipleAddresses()");
 		}
 	}
 
@@ -285,7 +287,7 @@ public class AddressHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void removeSingularAddress(Connection conn, BufferedReader reader) {
+	public void removeSingularAddress(Connection conn, BufferedReader reader) {
 		try {
 			List<Integer> ids = new ArrayList<>();
 			PreparedStatement ps = conn.prepareStatement("SELECT id FROM address");
@@ -297,22 +299,22 @@ public class AddressHelper {
 			System.out.print("Please select an address: ");
 			int selectedId = Integer.parseInt(reader.readLine());
 			if(ids.contains(selectedId)) { //Makes sure the selected id is a valid id
-				boolean removed = Address.removeAddress(conn, "id", Integer.toString(selectedId));
+				boolean removed = addressHelper.removeAddress(conn, selectedId);
 				if(removed) { //Makes sure the address was removed from the database
 					System.out.println();
 					System.out.println("Address with the id " + selectedId + " was removed from the database!");
 					System.out.println();
 				}else {
 					System.out.println("There was an error removing the address with " + selectedId + " from the database!");
-					CLIHelper.log("There was an error removing the address with " + selectedId + " from the database!", "AddressHelper.java", "removeSingularAddress()");
+					frontendHelper.log("There was an error removing the address with " + selectedId + " from the database!", "AddressHelper.java", "removeSingularAddress()");
 				}
 			}else {
 				System.out.println("The ID the user enter was not valid!");
-				CLIHelper.log("The ID the user enter was not valid!", "AddressHelper.java", "removeSingularAddress()");
+				frontendHelper.log("The ID the user enter was not valid!", "AddressHelper.java", "removeSingularAddress()");
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing address. Please check the log!");
-			CLIHelper.log(e, "AddressHelper.java", "removeSingularAddress()");
+			frontendHelper.log(e, "AddressHelper.java", "removeSingularAddress()");
 		}
 	}
 
@@ -321,17 +323,17 @@ public class AddressHelper {
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
 	 */
-	public static void removeMultipleAddresses(Connection conn, BufferedReader reader) {
+	public void removeMultipleAddresses(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumAddresses = Address.getAddress(conn).size();
+			int maxNumAddresses = addressHelper.getAllAddresses(conn).size();
 			System.out.print("How many addresses do you want to update (must be less then " + maxNumAddresses + "): ");
 			int numAddress = Integer.parseInt(reader.readLine());
 			if(numAddress>maxNumAddresses) { //Checks that the number of addresses the user wants to remove is not more then the number of addresses in the database
 				System.out.println("Can't remove " + numAddress + " only " + maxNumAddresses + " addresses are in the database!");
-				CLIHelper.log("Can't remove " + numAddress + " only " + maxNumAddresses + " addresses are in the database!", "AddressHelper.java", "removeMultipleAddresses()");
+				frontendHelper.log("Can't remove " + numAddress + " only " + maxNumAddresses + " addresses are in the database!", "AddressHelper.java", "removeMultipleAddresses()");
 			}else if(!(numAddress>=0)) { //Checks that the number of addresses the user wants to remove is greater then 0
 				System.out.println("Can't remove "+ numAddress + " addresses!");
-				CLIHelper.log("Can't remove "+ numAddress + " addresses!", "AddressHelper.java", "removeMultipleAddresses()");
+				frontendHelper.log("Can't remove "+ numAddress + " addresses!", "AddressHelper.java", "removeMultipleAddresses()");
 			}else {
 				System.out.println();
 				for(int i=0; i<numAddress; i++) { //Loops through removeSingularAddress() for the amount of address the user wants to remove
@@ -343,7 +345,7 @@ public class AddressHelper {
 			}
 		}catch(Exception e) {
 			System.out.println("Error removing address. Please check the log!");
-			CLIHelper.log(e, "AddressHelper.java", "removeMultipleAddresses()");
+			frontendHelper.log(e, "AddressHelper.java", "removeMultipleAddresses()");
 		}
 	}
 }

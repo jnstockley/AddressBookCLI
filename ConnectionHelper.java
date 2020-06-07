@@ -1,4 +1,4 @@
-package com.jackstockley.addressbookcli;
+package jackstockley.addressbookcli;
 
 import java.sql.*;
 import com.opencsv.CSVReader;
@@ -18,29 +18,30 @@ import java.util.Base64;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-import com.jackstockley.addressbook.Helper;
 
 /**
  * This part of the program help with getting and saving connection to a CSV file and also helps with duplicate checking and password salting and hashing
  * @author jnstockley
- * @version 2.00
+ * @version 2.6
  *
  */
 
 public class ConnectionHelper {
 
+	private FrontendHelper frontendHelper = new FrontendHelper();
+	
 	/**
 	 * Creates a salt when saving passwords
 	 * @return A salt used for saving passwords
 	 */
-	private static String generateSalt() {
+	private String generateSalt() {
 		try {
 			SecureRandom sr = SecureRandom.getInstance("SHA1PRNG");
 			byte[] salt = new byte[16];
 			sr.nextBytes(salt);
 			return Base64.getEncoder().encodeToString(salt);
 		} catch (Exception e) {
-			CLIHelper.log(e, "Helper.java", "generateSalt()");
+			frontendHelper.log(e, "Helper.java", "generateSalt()");
 			return null;
 		} 
 	}
@@ -51,7 +52,7 @@ public class ConnectionHelper {
 	 * @param salt A string that will be used as the salt
 	 * @return
 	 */
-	private static String encryptPassword(String password, String salt) {
+	private String encryptPassword(String password, String salt) {
 		try {
 			password = String.valueOf(salt) + password;
 			MessageDigest md = MessageDigest.getInstance("SHA-256");
@@ -67,7 +68,7 @@ public class ConnectionHelper {
 			} 
 			return passSb.toString();
 		} catch (Exception e) {
-			CLIHelper.log(e, "ConnectionManager.java", "encryptPassword()");
+			frontendHelper.log(e, "ConnectionManager.java", "encryptPassword()");
 			return null;
 		} 
 	}
@@ -77,7 +78,7 @@ public class ConnectionHelper {
 	 * @param IP A string containing an IPV4 address or a domain name
 	 * @return True if IP is a valid IPV4 address or domain name otherwise false
 	 */
-	private static boolean regularExpressionChecker(String IP) {
+	private boolean regularExpressionChecker(String IP) {
 		String ipv4Pattern = "^(?:[0-9]{1,3}\\.){3}[0-9]{1,3}$";
 		String domainNamePattern = "^(?!:\\/\\/)([a-zA-Z0-9-_]+\\.)*[a-zA-Z0-9][a-zA-Z0-9-_]+\\.[a-zA-Z]{2,11}?$";
 		Pattern ipv4R = Pattern.compile(ipv4Pattern);
@@ -99,9 +100,9 @@ public class ConnectionHelper {
 	 * @return A list of server address, username, database name, user name, hashed password and regular password
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static List<String> saveConnection(BufferedReader reader, Console passwordReader, String fileName) {
+	public List<String> saveConnection(BufferedReader reader, Console passwordReader, String fileName) {
 		try {
-			String newFileName = Helper.dirFixer(ConnectionHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + fileName;
+			String newFileName = frontendHelper.dirFixer(ConnectionHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + fileName;
 			List<String> connection = new ArrayList<>();
 			System.out.print("Please enter Server IP or Domain Name: ");
 			String IP = reader.readLine();
@@ -178,14 +179,14 @@ public class ConnectionHelper {
 					return connection;
 				}
 				System.out.println("Error the passwords are not the same or the User already exists!");
-				CLIHelper.log("Error the passwords are not the same or the User already exists!", "ConnectionHelper.java", "saveConnection()");
+				frontendHelper.log("Error the passwords are not the same or the User already exists!", "ConnectionHelper.java", "saveConnection()");
 				return null;
 			} 
 			System.out.println("IP/Domain Name is not valid!");
-			CLIHelper.log("IP/Domain Name is not valid!", "ConnectionHelper.java", "saveConnection()");
+			frontendHelper.log("IP/Domain Name is not valid!", "ConnectionHelper.java", "saveConnection()");
 			return null;
 		} catch (Exception e) {
-			CLIHelper.log(e, "ConnectionManager.java", "saveConnection()");
+			frontendHelper.log(e, "ConnectionManager.java", "saveConnection()");
 			return null;
 		} 
 	}
@@ -198,10 +199,9 @@ public class ConnectionHelper {
 	 * @param userName The userName for the connection
 	 * @return True if the connection is already in the file false otherwise
 	 */
-	@SuppressWarnings("resource")
-	private static boolean duplicateConnection(String fileName, String IP, String database, String userName) {
+	private boolean duplicateConnection(String fileName, String IP, String database, String userName) {
 		try {
-			fileName = Helper.dirFixer(ConnectionHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + fileName;
+			fileName = frontendHelper.dirFixer(ConnectionHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + fileName;
 			File file = new File(fileName);
 			if (file.exists()) { //Checks if the file exists
 				CSVReader csv = new CSVReader(new FileReader(fileName));
@@ -213,7 +213,7 @@ public class ConnectionHelper {
 			} 
 			return false;
 		} catch (Exception e) {
-			CLIHelper.log(e, "ConnectionManager.java", "duplicateConnection()");
+			frontendHelper.log(e, "ConnectionManager.java", "duplicateConnection()");
 			return false;
 		} 
 	}
@@ -223,10 +223,10 @@ public class ConnectionHelper {
 	 * @param fileName The save connection file name
 	 * @return A list of lists with the data from the file with all the connections
 	 */
-	@SuppressWarnings({ "rawtypes", "resource" })
-	private static List<List> getAllConnections(String fileName) {
+	@SuppressWarnings("rawtypes")
+	private List<List> getAllConnections(String fileName) {
 		try {
-			fileName = Helper.dirFixer(ConnectionHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + fileName;
+			fileName = frontendHelper.dirFixer(ConnectionHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + fileName;
 			CSVReader csv = new CSVReader(new FileReader(fileName));
 			String[] row = null;
 			List<List> connections = new ArrayList<>();
@@ -241,7 +241,7 @@ public class ConnectionHelper {
 			} 
 			return connections;
 		} catch (Exception e) {
-			CLIHelper.log(e, "ConnectionManager.java", "getAllConnections()");
+			frontendHelper.log(e, "ConnectionManager.java", "getAllConnections()");
 			return null;
 		} 
 	}
@@ -255,7 +255,7 @@ public class ConnectionHelper {
 	 * @return A list of strings that can be used to build an SQL connection string
 	 */
 	@SuppressWarnings({ "rawtypes", "unchecked" })
-	public static List<String> retrieveConnection(BufferedReader reader, Console passwordReader, String fileName, boolean testingMode) {
+	public List<String> retrieveConnection(BufferedReader reader, Console passwordReader, String fileName, boolean testingMode) {
 		try {
 			String password;
 			List<List> connections = getAllConnections(fileName);
@@ -280,7 +280,7 @@ public class ConnectionHelper {
 			} 
 			return null;
 		} catch (Exception e) {
-			CLIHelper.log(e, "ConnectionManager.java", "retrieveConnection()");
+			frontendHelper.log(e, "ConnectionManager.java", "retrieveConnection()");
 			return null;
 		} 
 	}
@@ -291,14 +291,14 @@ public class ConnectionHelper {
 	 * @param password A non hashed password that the user entered
 	 * @return
 	 */
-	private static boolean confirmPassword(List<String> connection, String password) {
+	private boolean confirmPassword(List<String> connection, String password) {
 		try {
 			String hashedPassword = encryptPassword(password, connection.get(4));
 			if (((String)connection.get(3)).equals(hashedPassword))
 				return true; 
 			return false;
 		} catch (Exception e) {
-			CLIHelper.log(e, "ConnectionManager.java", "confirmPassword()");
+			frontendHelper.log(e, "ConnectionManager.java", "confirmPassword()");
 			return false;
 		} 
 	}
@@ -310,9 +310,9 @@ public class ConnectionHelper {
 	 * @param fileName The file name wehre the connections are saved
 	 */
 	@SuppressWarnings({ "unchecked", "rawtypes" })
-	public static void removeConnection(BufferedReader reader, Console passwordReader, String fileName) {
+	public void removeConnection(BufferedReader reader, Console passwordReader, String fileName) {
 		try {
-			String newFileName = Helper.dirFixer(ConnectionHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + fileName;
+			String newFileName = frontendHelper.dirFixer(ConnectionHelper.class.getProtectionDomain().getCodeSource().getLocation().toURI().getPath()) + fileName;
 			List<String> removedConnection = retrieveConnection(reader, passwordReader, fileName, false);
 			removedConnection.remove(removedConnection.size() - 1);
 			List<List> connections = getAllConnections(fileName);
@@ -334,7 +334,7 @@ public class ConnectionHelper {
 			} 
 			connectionFile.close();
 		} catch (Exception e) {
-			CLIHelper.log(e, "ConnectionManager.java", "removeConnection()");
+			frontendHelper.log(e, "ConnectionManager.java", "removeConnection()");
 		} 
 	}
 
@@ -343,12 +343,12 @@ public class ConnectionHelper {
 	 * @param savedConnection A list of strings from the save connection file
 	 * @return A SQL connection string to connect to the MySQL database
 	 */
-	public static Connection connectionBuilder(List<String> savedConnection) {
+	public Connection connectionBuilder(List<String> savedConnection) {
 		try {
 			String connection = MessageFormat.format("jdbc:mysql://{0}/{1}?user={2}&password={3}&serverTimezone=UTC", new Object[] { savedConnection.get(0), savedConnection.get(1), savedConnection.get(2), savedConnection.get(savedConnection.size()-1) });
 			return (Connection)DriverManager.getConnection(connection);
 		} catch (Exception e) {
-			CLIHelper.log(e, "ConnectionManager.java", "connectionBuilder()");
+			frontendHelper.log(e, "ConnectionManager.java", "connectionBuilder()");
 			return null;
 		} 
 	}
@@ -360,7 +360,7 @@ public class ConnectionHelper {
 	 * @return A list of strings that can be used to connect to the MySQL server
 	 */
 	@SuppressWarnings("unused")
-	public static List<String> noSaveConnection(BufferedReader reader, Console passwordReader) {
+	public List<String> noSaveConnection(BufferedReader reader, Console passwordReader) {
 		try{
 			List<String> connection = new ArrayList<String>();
 			System.out.print("Please enter Server IP or Domain Name: ");
@@ -391,7 +391,7 @@ public class ConnectionHelper {
 			}
 			return connection;
 		}catch(Exception e) {
-			CLIHelper.log(e, "ConnectionManger.java", "noSaveConnection()");
+			frontendHelper.log(e, "ConnectionManger.java", "noSaveConnection()");
 			return null;
 		}
 	}
