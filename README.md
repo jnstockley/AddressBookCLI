@@ -1,7 +1,7 @@
 # AddressBookCLI
 
 ## Version 3.1
-This is the last update I will post for this project unless it breaks compatibility with the MySQL database. This update includes the new backend, removal of the get by field, and updated dependenices.
+This is the last update I will post for this project unless it breaks compatibility with the MySQL database. This update includes the new backend, removal of the get by field, and updated dependencies.
 
 ## Version 2.6
 Version 2.6 has been released! This version includes support for the new backend as well as AES encryption and decryption! Also this is going to be the FINAL planned release for this project! I am going to be focusing my efforts on the REST API over the CLI! I will still post bug fixes as needed but don't plan on any new features!
