@@ -1,4 +1,4 @@
-package jackstockley.addressbookcli;
+package com.github.jnstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.sql.Connection;
@@ -9,12 +9,12 @@ import java.util.List;
 
 import org.apache.commons.text.WordUtils;
 
-import jackstockley.addressbook.Person;
+import com.github.jnstockley.addressbook.*;
 
 /**
  * This part of the program helps connect the user to the MySQL database and the person table by formatting data and allowing user input
  * @author jnstockley
- * @version 2.6
+ * @version 3.1
  *
  */
 public class PersonHelper {
@@ -28,7 +28,7 @@ public class PersonHelper {
 	 */
 	public void getAllPeople(Connection conn){
 		try {
-			List<Person> people = personHelper.getAllPeople(conn); //Gets a list of all the people in the database
+			List<Person> people = personHelper.get(conn); //Gets a list of all the people in the database
 			if(people!=null) {
 				for(Person person: people) { //Prints out the list of people to the console!
 					System.out.println(person);
@@ -48,7 +48,9 @@ public class PersonHelper {
 	 * Gets similar people from the database based on the field and data from the user
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
+	 * @deprecated
 	 */
+	@Deprecated
 	public void getSimilarPeople(Connection conn, BufferedReader reader){
 		try {
 			List<Person> people = new ArrayList<>();
@@ -153,7 +155,7 @@ public class PersonHelper {
 			int selectedId = Integer.parseInt(reader.readLine());
 			System.out.println();
 			if(ids.contains(selectedId)) { //Checks if the user entered id is in the list of id's from the database
-				Person person = personHelper.getSingularPerson(conn, selectedId);
+				Person person = personHelper.get(conn, selectedId);
 				if(person!=null) {
 					System.out.println(person); //Gets the selected person and prints out the person
 				}else {
@@ -291,7 +293,7 @@ public class PersonHelper {
 				}
 				System.out.println();
 				Person updatedPerson = new Person(id, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId);
-				Person person = personHelper.updatePerson(conn, id, updatedPerson); //Updates the person and prints out the updated person
+				Person person = personHelper.update(conn, id, updatedPerson); //Updates the person and prints out the updated person
 				if(person!=null) {
 					System.out.println(person);
 				}else {
@@ -316,7 +318,7 @@ public class PersonHelper {
 	 */
 	public void updateMultiplePeople(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumPeople = personHelper.getAllPeople(conn).size();
+			int maxNumPeople = personHelper.get(conn).size();
 			System.out.print("How many people do you want to update (must be less then " + maxNumPeople + "): ");
 			int numPeople = Integer.parseInt(reader.readLine());
 			if(numPeople>maxNumPeople) { // Checks that the number of people the user wants to update is not more then the number of people in the database
@@ -448,7 +450,7 @@ public class PersonHelper {
 			}
 			System.out.println();
 			Person newPerson = new Person(data.get(0), data.get(1), data.get(2), data.get(3), data.get(4), data.get(5), data.get(6), data.get(7), Double.parseDouble(data.get(8)), Double.parseDouble(data.get(9)), data.get(10), data.get(11), addressId, occupationId);
-			Person person = personHelper.insertPerson(conn, newPerson); //Creates the new person and prints out the new person
+			Person person = personHelper.insert(conn, newPerson); //Creates the new person and prints out the new person
 			if(person!=null) {
 				System.out.println(person);
 			}else {
@@ -505,7 +507,7 @@ public class PersonHelper {
 			System.out.print("Please select a person: ");
 			int selectedId = Integer.parseInt(reader.readLine());
 			if(ids.contains(selectedId)) { //Makes sure the selected id is a valid id
-				boolean removed = personHelper.removePerson(conn, selectedId);
+				boolean removed = personHelper.delete(conn, selectedId);
 				if(removed) { //Makes sure the address was removed from the database
 					System.out.println();
 					System.out.println("Person with the id " + selectedId + " was removed from the database!");
@@ -531,7 +533,7 @@ public class PersonHelper {
 	 */
 	public void removeMultiplePeople(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumPeople = personHelper.getAllPeople(conn).size();
+			int maxNumPeople = personHelper.get(conn).size();
 			System.out.print("How many people do you want to update (must be less then " + maxNumPeople + "): ");
 			int numPeople = Integer.parseInt(reader.readLine());
 			if(numPeople>maxNumPeople) { //Checks that the number of people the user wants to remove is not more then the number of people in the database

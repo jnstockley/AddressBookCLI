@@ -1,4 +1,4 @@
-package jackstockley.addressbookcli;
+package com.github.jnstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.io.File;

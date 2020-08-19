@@ -1,4 +1,4 @@
-package jackstockley.addressbookcli;
+package com.github.jnstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.sql.Connection;
@@ -9,13 +9,12 @@ import java.util.List;
 
 import org.apache.commons.text.WordUtils;
 
-import jackstockley.addressbook.Occupation;
-
+import com.github.jnstockley.addressbook.*;
 
 /**
  * This part of the program helps connect the user to the MySQL database and occupation table by formatting data and allowing user input
  * @author jnstockley
- * @version 2.6
+ * @version 3.1
  *
  */
 public class OccupationHelper {
@@ -29,7 +28,7 @@ public class OccupationHelper {
 	 */
 	public void getAllOccupations(Connection conn){
 		try {
-			List<Occupation> occupations = occupationHelper.getAllOccupations(conn); //Gets a list of all the occupations in the database
+			List<Occupation> occupations = occupationHelper.get(conn); //Gets a list of all the occupations in the database
 			if(occupations!=null) {
 				for(Occupation occupation: occupations) { //Prints out the list of occupations to the console!
 					System.out.println(occupation);
@@ -49,7 +48,9 @@ public class OccupationHelper {
 	 * Gets similar occupations from the database based on the field and data from the user
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
+	 * @deprecated
 	 */
+	@Deprecated
 	public void getSimilarOccupations(Connection conn, BufferedReader reader){
 		try {
 			List<String> fields = new ArrayList<>();
@@ -118,7 +119,7 @@ public class OccupationHelper {
 			int selectedId = Integer.parseInt(reader.readLine());
 			System.out.println();
 			if(ids.contains(selectedId)) { //Checks if the user entered id is in the list of id's from the database
-				Occupation occupation = occupationHelper.getSingularOccupation(conn, selectedId);
+				Occupation occupation = occupationHelper.get(conn, selectedId);
 				if(occupation!=null) {
 					System.out.println(occupation); //Gets the selected occupation and prints out the occupation
 				}else {
@@ -176,7 +177,7 @@ public class OccupationHelper {
 				}
 				System.out.println();
 				Occupation updatedOccupation = new Occupation(id, data.get(0), data.get(1), data.get(2), data.get(3), data.get(4));
-				Occupation occupation = occupationHelper.updateOccupation(conn, id, updatedOccupation);
+				Occupation occupation = occupationHelper.update(conn, id, updatedOccupation);
 				if(occupation!=null) {
 					System.out.println(occupation);
 				}else {
@@ -200,7 +201,7 @@ public class OccupationHelper {
 	 */
 	public void updateMultipleOccupations(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumOccupations = occupationHelper.getAllOccupations(conn).size();
+			int maxNumOccupations = occupationHelper.get(conn).size();
 			System.out.print("How many occupations do you want to update (must be less then " + maxNumOccupations + "): ");
 			int numOccupations = Integer.parseInt(reader.readLine());
 			if(numOccupations>maxNumOccupations) { // Checks that the number of occupations the user wants to update is not more then the number of occupations in the database
@@ -259,7 +260,7 @@ public class OccupationHelper {
 			}
 			System.out.println();
 			Occupation newOccupation = new Occupation(data.get(0), data.get(1), data.get(2), data.get(3), data.get(4));
-			Occupation occupation = occupationHelper.insertOccupation(conn, newOccupation);
+			Occupation occupation = occupationHelper.insert(conn, newOccupation);
 			if(occupation!=null) {
 				System.out.println(occupation);
 			}else {
@@ -316,7 +317,7 @@ public class OccupationHelper {
 			System.out.print("Please select an occupation: ");
 			int selectedId = Integer.parseInt(reader.readLine());
 			if(ids.contains(selectedId)) { //Makes sure the selected id is a valid id
-				boolean removed = occupationHelper.removeOccupation(conn, selectedId);
+				boolean removed = occupationHelper.delete(conn, selectedId);
 				if(removed) { //Makes sure the address was removed from the database
 					System.out.println();
 					System.out.println("Occupation with the id " + selectedId + " was removed from the database!");
@@ -342,7 +343,7 @@ public class OccupationHelper {
 	 */
 	public void removeMultipleOccupations(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumOccupations = occupationHelper.getAllOccupations(conn).size();
+			int maxNumOccupations = occupationHelper.get(conn).size();
 			System.out.print("How many occupations do you want to update (must be less then " + maxNumOccupations + "): ");
 			int numOccupations = Integer.parseInt(reader.readLine());
 			if(numOccupations>maxNumOccupations) { //Checks that the number of occupations the user wants to remove is not more then the number of occupations in the database

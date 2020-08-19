@@ -1,4 +1,4 @@
-package jackstockley.addressbookcli;
+package com.github.jnstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.sql.Connection;
@@ -9,12 +9,12 @@ import java.util.List;
 import org.apache.commons.text.WordUtils;
 
 
-import jackstockley.addressbook.*;
+import com.github.jnstockley.addressbook.*;
 
 /**
  * This part of the program helps connect the user to the MySQL database and address table by formating data and allowing user input
  * @author jnstockley
- * @version 2.6
+ * @version 3.1
  *
  */
 
@@ -28,7 +28,7 @@ public class AddressHelper {
 	 */
 	public void getAllAddresses(Connection conn){
 		try {
-			List<Address> addresses = addressHelper.getAllAddresses(conn); //Gets a list of all the address in the database
+			List<Address> addresses = addressHelper.get(conn); //Gets a list of all the address in the database
 			if(addresses!=null) {
 				for(Address address: addresses) { //Prints out the list of addresses to the console!
 					System.out.println(address);
@@ -47,7 +47,9 @@ public class AddressHelper {
 	 * Gets similar addresses from the database based on the field and data from the user
 	 * @param conn The MySQL connection
 	 * @param reader How I am reading data from the console
+	 * @deprecated
 	 */
+	@Deprecated
 	public void getSimilarAddresses(Connection conn, BufferedReader reader){
 		try {
 			List<String> fields = new ArrayList<>();
@@ -113,7 +115,7 @@ public class AddressHelper {
 			int selectedId = Integer.parseInt(reader.readLine());
 			System.out.println();
 			if(ids.contains(selectedId)) { //Checks if the user entered id is in the list of id's from the database
-				Address address = addressHelper.getSingularAddress(conn, selectedId);
+				Address address = addressHelper.get(conn, selectedId);
 				if(address!=null) {
 					System.out.println(address); //Gets the selected address and prints out the address
 				}else {
@@ -165,7 +167,7 @@ public class AddressHelper {
 				}
 				System.out.println();
 				Address updatedAddress = new Address(id, Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4));
-				Address address = addressHelper.updateAddress(conn, id, updatedAddress);
+				Address address = addressHelper.update(conn, id, updatedAddress);
 				if(address!=null) {
 					System.out.println(address);
 				}else {
@@ -189,7 +191,7 @@ public class AddressHelper {
 	 */
 	public void updateMultipleAddresses(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumAddresses = addressHelper.getAllAddresses(conn).size();
+			int maxNumAddresses = addressHelper.get(conn).size();
 			System.out.print("How many addresses do you want to update (must be less then " + maxNumAddresses + "): ");
 			int numAddresses = Integer.parseInt(reader.readLine());
 			if(numAddresses>maxNumAddresses) { // Checks that the number of addresses the user wants to update is not more then the number of addresses in the database
@@ -242,7 +244,7 @@ public class AddressHelper {
 			}
 			System.out.println();
 			Address newAddress = new Address(Integer.parseInt(data.get(0)), data.get(1), data.get(2), data.get(3), data.get(4));
-			Address address = addressHelper.insertAddress(conn, newAddress);
+			Address address = addressHelper.insert(conn, newAddress);
 			if(address!=null) {
 				System.out.println(address);
 			}else {
@@ -299,7 +301,7 @@ public class AddressHelper {
 			System.out.print("Please select an address: ");
 			int selectedId = Integer.parseInt(reader.readLine());
 			if(ids.contains(selectedId)) { //Makes sure the selected id is a valid id
-				boolean removed = addressHelper.removeAddress(conn, selectedId);
+				boolean removed = addressHelper.delete(conn, selectedId);
 				if(removed) { //Makes sure the address was removed from the database
 					System.out.println();
 					System.out.println("Address with the id " + selectedId + " was removed from the database!");
@@ -325,7 +327,7 @@ public class AddressHelper {
 	 */
 	public void removeMultipleAddresses(Connection conn, BufferedReader reader) {
 		try {
-			int maxNumAddresses = addressHelper.getAllAddresses(conn).size();
+			int maxNumAddresses = addressHelper.get(conn).size();
 			System.out.print("How many addresses do you want to update (must be less then " + maxNumAddresses + "): ");
 			int numAddress = Integer.parseInt(reader.readLine());
 			if(numAddress>maxNumAddresses) { //Checks that the number of addresses the user wants to remove is not more then the number of addresses in the database

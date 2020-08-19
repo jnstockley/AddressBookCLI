@@ -1,4 +1,4 @@
-package jackstockley.addressbookcli;
+package com.github.jnstockley.addressbookcli;
 
 import org.jsoup.Jsoup;
 import org.jsoup.nodes.Document;
@@ -6,7 +6,7 @@ import org.jsoup.nodes.Document;
 /**
  * This small part of the program helps check for version updated of the program and tells the user how to download them
  * @author jnstockley
- * @version 2.6
+ * @version 3.1
  *
  */
 

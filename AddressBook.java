@@ -1,4 +1,4 @@
-package jackstockley.addressbookcli;
+package com.github.jnstockley.addressbookcli;
 
 import java.io.BufferedReader;
 import java.io.Console;
@@ -15,7 +15,7 @@ import org.apache.commons.lang3.text.WordUtils;
 /**
  * This program allows a user to interact with an address book that is saved on a MySQL database over the Internet!
  * @author jnstockley
- * @version 2.6
+ * @version 3.1
  * 
  */
 
@@ -34,7 +34,7 @@ public class AddressBook {
 	 */
 	public static void main(String[] args) {
 		try {
-			double appVersion = 2.6;
+			double appVersion = 3.1;
 			Connection conn = null;
 			boolean running = true;
 			if(updater.upToDate(appVersion)) { //Makes sure the program is on the latest version!
@@ -64,7 +64,7 @@ public class AddressBook {
 						frontendHelper.log("Invalid Connection type selected", "AddressBook.java", "main()");
 					}
 					if (testingMode) {
-						conn = (Connection)DriverManager.getConnection("jdbc:mysql://10.0.0.191/addressBook?user=********&password=********&serverTimezone=UTC");
+						conn = (Connection)DriverManager.getConnection("jdbc:mysql://10.0.0.191/addressBook?user=Jack&password=Dr1v3r0o&serverTimezone=UTC");
 					} else {
 						conn = connectionHelper.connectionBuilder(connection);
 					} 
@@ -161,7 +161,7 @@ public class AddressBook {
 	 */
 	public String getMethod(BufferedReader reader, String table, Connection conn) {
 		try {
-			List<String> methods = new ArrayList<>(Arrays.asList(new String[] { "Get All", "Get By Field", "Get Singular", "Update Singular", "Update Multiple", "Insert Singular", "Insert Multiple", "Remove Singular", "Remove Multiple" }));
+			List<String> methods = new ArrayList<>(Arrays.asList(new String[] { "Get All", "Get Singular", "Update Singular", "Update Multiple", "Insert Singular", "Insert Multiple", "Remove Singular", "Remove Multiple" }));
 			System.out.println("Please select method for the " + table + " table (Enter 0 to change table): ");
 			int methodId = 1;
 			for (String item : methods) { //Prints all the methods
@@ -205,14 +205,14 @@ public class AddressBook {
 			} else if (table.equals("Person")) {
 				personHelper.getAllPeople(conn);
 			} 
-		} else if (method.equals("Get By Field")) {
+		/*} else if (method.equals("Get By Field")) {
 			if (table.equals("Address")) {
 				addressHelper.getSimilarAddresses(conn, reader);
 			} else if (table.equals("Occupation")) {
 				occupationHelper.getSimilarOccupations(conn, reader);
 			} else if (table.equals("Person")) {
 				personHelper.getSimilarPeople(conn, reader);
-			} 
+			} */
 		} else if (method.equals("Get Singular")) {
 			if (table.equals("Address")) {
 				addressHelper.getSingularAddress(conn, reader);
